@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { CheckCircle, LogOut, Search, Brain, Trophy, X, Clock, ChevronLeft, ChevronRight, AlertTriangle, Lock, PlayCircle, Zap, Info, Award, BarChart2 } from 'lucide-react'
 import {
@@ -220,6 +220,11 @@ function ConceptInlinePanel({ conceptId, navList, onClose, navigate, startQuiz }
   const [quizStatus, setQuizStatus] = useState(null)
   const [loading, setLoading] = useState(true)
   const [tab, setTab]         = useState('simple')
+  const tipRef      = useRef(null)
+  const mistakesRef = useRef(null)
+  const quizRef     = useRef(null)
+
+  const scrollTo = (ref) => ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   useEffect(() => {
     setLoading(true); setTab('simple')
@@ -258,16 +263,40 @@ function ConceptInlinePanel({ conceptId, navList, onClose, navigate, startQuiz }
         <div style={{ flex: 1, minWidth: 0 }}>
           <div className="sl-concept-inline-title">{concept.title}</div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', flexShrink: 0 }}>
-          <span style={{ fontFamily: "'Share Tech Mono', monospace", fontSize: '0.62rem', color: 'var(--text-muted)' }}>
-            <Clock size={11} style={{ display: 'inline', marginRight: 3 }} />
-            {concept.estimatedMinutes}m
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          
+          
+          {concept.tip && (
+            <button onClick={() => scrollTo(tipRef)} style={{ fontFamily: "'Share Tech Mono', monospace", fontSize: '0.80rem', letterSpacing: '0.07em', padding: '0.18rem 0.55rem', borderRadius: 20, border: '1px solid rgba(245,158,11,0.35)', background: 'rgba(245,158,11,0.07)', color: '#F59E0B', cursor: 'pointer', transition: 'background 0.15s' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(245,158,11,0.22)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(245,158,11,0.07)'}>
+              ⚡ TIP
+            </button>
+          )}
+          {concept.commonMistakes?.length > 0 && (
+            <button onClick={() => scrollTo(mistakesRef)} style={{ fontFamily: "'Share Tech Mono', monospace", fontSize: '0.8rem', letterSpacing: '0.07em', padding: '0.18rem 0.55rem', borderRadius: 20, border: '1px solid rgba(239,68,68,0.35)', background: 'rgba(239,68,68,0.07)', color: '#EF4444', cursor: 'pointer', transition: 'background 0.15s' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.22)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(239,68,68,0.07)'}>
+              ⚠ MISTAKES
+            </button>
+          )}
+          <button onClick={() => scrollTo(quizRef)} style={{ fontFamily: "'Share Tech Mono', monospace", fontSize: '0.8rem', letterSpacing: '0.07em', padding: '0.18rem 0.55rem', borderRadius: 20, border: '1px solid rgba(155,110,212,0.35)', background: 'rgba(155,110,212,0.07)', color: 'var(--primary)', cursor: 'pointer', transition: 'background 0.15s' }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(155,110,212,0.22)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(155,110,212,0.07)'}>
+            ⚔ TEST
+          </button>
+
           {concept.completed && (
-            <span className="badge badge-cleared" style={{ fontFamily: "'Share Tech Mono', monospace", fontSize: '0.6rem', letterSpacing: '0.06em' }}>
+            <span className="badge badge-cleared" style={{ fontFamily: "'Share Tech Mono', monospace", fontSize: '0.7rem', letterSpacing: '0.06em' }}>
               <CheckCircle size={9} style={{ marginRight: 3 }} /> CLEARED
             </span>
           )}
+
+
+          <span style={{ fontFamily: "'Share Tech Mono', monospace", fontSize: '1rem', color: 'var(--text-muted)' }}>
+            <Clock size={11} style={{ display: 'inline', marginRight: 3 }} />
+            {concept.estimatedMinutes}m
+          </span>
         </div>
       </div>
 
@@ -362,7 +391,7 @@ function ConceptInlinePanel({ conceptId, navList, onClose, navigate, startQuiz }
 
         {/* Tip */}
         {concept.tip && (
-          <div className="concept-tip-box">
+          <div ref={tipRef} className="concept-tip-box">
             <div className="concept-tip-label">⚡ Hunter Tip</div>
             <p className="concept-tip-text">{concept.tip}</p>
           </div>
@@ -370,7 +399,7 @@ function ConceptInlinePanel({ conceptId, navList, onClose, navigate, startQuiz }
 
         {/* Common Mistakes */}
         {concept.commonMistakes?.length > 0 && (
-          <div>
+          <div ref={mistakesRef}>
             <div className="concept-section-heading" style={{ marginBottom: '0.5rem' }}>Common Mistakes</div>
             <div className="concept-mistakes-list">
               {concept.commonMistakes.map((m, i) => (
@@ -402,7 +431,7 @@ function ConceptInlinePanel({ conceptId, navList, onClose, navigate, startQuiz }
         )}
 
         {/* Quiz status — auto-cleared after passing, no manual button needed */}
-        <div style={{ marginTop: '0.25rem' }}>
+        <div ref={quizRef} style={{ marginTop: '0.25rem' }}>
           {isMastered ? (
             <div style={{ border: '1.5px solid #4ADE8055', borderRadius: 'var(--radius-md)', padding: '1rem', background: 'rgba(74,222,128,0.05)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
