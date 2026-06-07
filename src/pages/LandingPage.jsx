@@ -80,6 +80,7 @@ const steps = [
 
 const NAV_LINKS = [
   { label: 'Skills Arena', live: true },
+  { label: 'Missions',     live: true, href: '/missions' },
   { label: 'Resume', live: false },
   { label: 'AI', live: false },
   { label: 'Jobs', live: false },
@@ -140,7 +141,7 @@ export default function LandingPage() {
       const { data } = await guestLogin(storedGuestId)
       localStorage.setItem('guest_device_id', data.user.id)
       login(data.token, data.user)
-      navigate('/skill-arena/dashboard')
+      navigate('/')
     } catch {
       toast.error('Could not start guest session. Try again.')
     } finally {
@@ -184,7 +185,7 @@ export default function LandingPage() {
           {NAV_LINKS.map(link => (
             <div
               key={link.label}
-              onClick={link.live ? (link.scrollTo ? () => document.getElementById(link.scrollTo)?.scrollIntoView({ behavior: 'smooth' }) : handleEnter) : undefined}
+              onClick={link.live ? (link.href ? () => navigate(link.href) : link.scrollTo ? () => document.getElementById(link.scrollTo)?.scrollIntoView({ behavior: 'smooth' }) : handleEnter) : undefined}
               style={{
                 padding: '0.375rem 0.875rem', borderRadius: 6,
                 fontSize: '0.875rem',
@@ -264,7 +265,7 @@ export default function LandingPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginBottom: '1rem' }}>
               {NAV_LINKS.map(link => (
                 <button key={link.label}
-                  onClick={() => { if (link.live) { if (link.scrollTo) { document.getElementById(link.scrollTo)?.scrollIntoView({ behavior: 'smooth' }); setMobileMenuOpen(false) } else { handleEnter(); setMobileMenuOpen(false) } } }}
+                  onClick={() => { if (link.live) { if (link.href) { navigate(link.href); setMobileMenuOpen(false) } else if (link.scrollTo) { document.getElementById(link.scrollTo)?.scrollIntoView({ behavior: 'smooth' }); setMobileMenuOpen(false) } else { handleEnter(); setMobileMenuOpen(false) } } }}
                   style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '0.875rem 1rem', background: 'transparent', border: 'none', borderRadius: 10, color: link.live ? (theme === 'light' ? C.primary : '#C4B5FD') : C.muted, fontWeight: link.live ? 700 : 400, fontSize: '1rem', cursor: link.live ? 'pointer' : 'default', textAlign: 'left', borderBottom: `1px solid ${C.border}` }}>
                   <span>{link.label}</span>
                   {link.live ? (
@@ -576,6 +577,136 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Missions Section ───────────────────────────────── */}
+      <section style={{ padding: '5rem 1.5rem' }}>
+        <div style={{ maxWidth: 1060, margin: '0 auto' }}>
+
+          {/* Label */}
+          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+              color: lt ? '#7C3500' : '#FF7F2A', fontWeight: 700, fontSize: '0.78rem',
+              letterSpacing: '0.14em', textTransform: 'uppercase',
+              background: lt ? 'rgba(120,50,0,0.07)' : 'rgba(255,127,42,0.08)',
+              border: `1px solid ${lt ? 'rgba(120,50,0,0.2)' : 'rgba(255,127,42,0.2)'}`,
+              borderRadius: 20, padding: '0.3rem 0.9rem',
+            }}>
+              ⚔ NEW — Mission Board
+            </span>
+          </div>
+
+          {/* 2-col layout */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))',
+            gap: '2.5rem', alignItems: 'center', marginBottom: '2.5rem',
+          }}>
+            {/* Left — headline + CTA */}
+            <div>
+              <h2 style={{
+                fontSize: 'clamp(1.875rem, 4vw, 2.75rem)', fontWeight: 800,
+                letterSpacing: '-0.025em', lineHeight: 1.15,
+                color: C.text, margin: '0 0 1.25rem',
+              }}>
+                Tutorials teach you.<br />
+                <span style={{
+                  background: lt
+                    ? 'linear-gradient(135deg, #7C3500, #B06030)'
+                    : 'linear-gradient(135deg, #FF6B00, #FFB347)',
+                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}>
+                  Missions prove you.
+                </span>
+              </h2>
+              <p style={{ color: C.sub, fontSize: '1.0625rem', lineHeight: 1.8, margin: '0 0 2rem', maxWidth: 400 }}>
+                We've built a collection of real-world project challenges.
+                Accept a mission, build something that actually works, and prove your skills beyond theory.
+              </p>
+              <button
+                onClick={() => navigate('/missions')}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                  background: lt
+                    ? 'linear-gradient(135deg, #7C3500, #A04500)'
+                    : 'linear-gradient(135deg, #FF6B00, #FF7F2A)',
+                  border: 'none', borderRadius: 8,
+                  padding: '0.75rem 1.75rem',
+                  color: '#fff', fontWeight: 700, fontSize: '0.9375rem',
+                  cursor: 'pointer',
+                  boxShadow: lt ? '0 4px 20px rgba(120,50,0,0.3)' : '0 4px 24px rgba(255,127,42,0.4)',
+                  transition: 'transform 0.15s, box-shadow 0.15s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = lt ? '0 8px 28px rgba(120,50,0,0.45)' : '0 8px 32px rgba(255,127,42,0.6)' }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = lt ? '0 4px 20px rgba(120,50,0,0.3)' : '0 4px 24px rgba(255,127,42,0.4)' }}
+              >
+                ⚔ Explore Missions
+              </button>
+            </div>
+
+            {/* Right — 3 feature cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+              {[
+                { icon: '🎯', title: 'Project-based practice', body: 'Every mission is a complete project you build from scratch — not a drill, a real thing.' },
+                { icon: '🗺️', title: 'Clear objectives & hints', body: "Know exactly what to build. Stuck? Unlock hints one at a time without spoiling the answer." },
+                { icon: '📈', title: 'Matched to your skills', body: 'Missions span beginner to advanced — always something challenging but achievable.' },
+              ].map((card, i) => (
+                <div key={i} style={{
+                  display: 'flex', gap: '1rem', alignItems: 'flex-start',
+                  padding: '1.125rem 1.25rem',
+                  background: lt
+                    ? i === 0 ? 'rgba(255,127,42,0.06)' : 'rgba(255,255,255,0.55)'
+                    : i === 0 ? 'rgba(255,127,42,0.07)' : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${lt
+                    ? i === 0 ? 'rgba(120,50,0,0.18)' : 'rgba(0,0,0,0.07)'
+                    : i === 0 ? 'rgba(255,127,42,0.2)' : 'rgba(255,255,255,0.06)'}`,
+                  borderRadius: 12,
+                  transition: 'transform 0.2s',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'translateX(4px)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'none'}
+                >
+                  <span style={{ fontSize: '1.375rem', flexShrink: 0 }}>{card.icon}</span>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: C.text, marginBottom: '0.25rem' }}>{card.title}</div>
+                    <p style={{ color: C.sub, fontSize: '0.8375rem', lineHeight: 1.65, margin: 0 }}>{card.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Stats row */}
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '1px',
+            background: lt ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)',
+            borderRadius: 14, overflow: 'hidden',
+          }}>
+            {[
+              { number: '20+', label: 'Missions available' },
+              { number: '4',   label: 'Technologies covered' },
+              { number: '∞',   label: 'Ways to solve them' },
+            ].map((s, i) => (
+              <div key={i} style={{
+                textAlign: 'center', padding: '1.5rem 1rem',
+                background: lt ? 'rgba(255,255,255,0.7)' : 'rgba(13,17,32,0.5)',
+              }}>
+                <div style={{
+                  fontFamily: "'Orbitron', sans-serif", fontWeight: 900,
+                  fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                  color: lt ? '#8C4200' : '#FF7F2A', marginBottom: '0.25rem',
+                }}>
+                  {s.number}
+                </div>
+                <div style={{ color: C.muted, fontSize: '0.8rem' }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
       {/* ── How It Works ───────────────────────────────────── */}
       <section id="how-it-works" style={{
         padding: '5rem 1.5rem',
@@ -871,7 +1002,7 @@ export default function LandingPage() {
           {NAV_LINKS.map(link => (
             <span
               key={link.label}
-              onClick={link.live ? handleEnter : undefined}
+              onClick={link.live ? (link.href ? () => navigate(link.href) : link.scrollTo ? () => document.getElementById(link.scrollTo)?.scrollIntoView({ behavior: 'smooth' }) : handleEnter) : undefined}
               style={{
                 fontSize: '0.8rem',
                 color: link.live ? C.sub : C.muted,

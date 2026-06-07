@@ -65,7 +65,7 @@ export default function LoginPage() {
       const { data } = await guestLogin(storedGuestId)
       localStorage.setItem('guest_device_id', data.user.id)
       login(data.token, data.user)
-      navigate('/skill-arena/dashboard')
+      navigate(redirectTo)
     } catch {
       toast.error('Could not start guest session. Try again.')
     } finally {

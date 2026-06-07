@@ -1,4 +1,5 @@
 import { Menu, Sun, Moon } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { getRank } from '../utils/slRank'
@@ -6,6 +7,7 @@ import { getRank } from '../utils/slRank'
 export default function Navbar({ onMenuClick, title = '' }) {
   const { user } = useAuth()
   const { theme, toggleTheme } = useTheme()
+  const navigate = useNavigate()
   const isAdmin = user?.role === 'ADMIN'
 
   // Use xp/level/rank from user object (set by /api/auth/me which includes DB values)
@@ -24,6 +26,21 @@ export default function Navbar({ onMenuClick, title = '' }) {
       </div>
 
       <div className="navbar-right">
+        {/* Missions link */}
+        <button
+          onClick={() => navigate('/missions')}
+          style={{
+            background: 'none', border: '1px solid rgba(255,127,42,0.3)', borderRadius: 6,
+            padding: '0.2rem 0.65rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem',
+            fontFamily: "'Orbitron', sans-serif", fontSize: '0.6rem', fontWeight: 700,
+            letterSpacing: '0.08em', color: '#FF7F2A', transition: 'all 0.15s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,127,42,0.12)'; e.currentTarget.style.borderColor = 'rgba(255,127,42,0.6)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.borderColor = 'rgba(255,127,42,0.3)' }}
+          title="Mission Board"
+        >
+          ◆ MISSIONS
+        </button>
 <button className="theme-icon-btn" onClick={toggleTheme} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
           {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
         </button>

@@ -8,6 +8,8 @@ import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
 
+import MissionsPage from './pages/MissionsPage'
+import MissionDetailPage from './pages/MissionDetailPage'
 import DashboardPage from './pages/student-skill-arena/DashboardPage'
 import RoadmapDetailPage from './pages/student-skill-arena/RoadmapDetailPage'
 import QuizPage from './pages/student-skill-arena/QuizPage'
@@ -36,6 +38,10 @@ function App() {
           {/* Public */}
           <Route path="/login"    element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/missions" element={<MissionsPage />} />
+
+          {/* Missions detail — requires login */}
+          <Route path="/missions/:id" element={<ProtectedRoute><MissionDetailPage /></ProtectedRoute>} />
 
           {/* ── Student: skill-arena ── */}
           <Route path="/skill-arena/dashboard"              element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />

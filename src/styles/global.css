@@ -2712,3 +2712,134 @@ body { font-family: 'Rajdhani', 'Inter', -apple-system, sans-serif; font-size: 1
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* ══════════════════════════════════════════════════════
+   MISSION BOARD — NARUTO THEME
+══════════════════════════════════════════════════════ */
+
+/* ── Keyframe Animations ── */
+@keyframes shurikenSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes missionCardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px) rotate(-0.4deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes stampPress {
+  0%   { transform: scale(0.4) rotate(-15deg); opacity: 0; }
+  55%  { transform: scale(1.1) rotate(3deg);   opacity: 1; }
+  75%  { transform: scale(0.96) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0deg);     opacity: 1; }
+}
+
+@keyframes missionTitleGlow {
+  0%, 100% { filter: drop-shadow(0 0 12px rgba(255,127,42,0.35)); }
+  50%       { filter: drop-shadow(0 0 28px rgba(255,127,42,0.7)); }
+}
+
+@keyframes scrollUnroll {
+  from { opacity: 0; transform: scaleY(0.9) translateY(-8px); }
+  to   { opacity: 1; transform: scaleY(1)   translateY(0); }
+}
+
+/* ── Mission Card ── */
+.mission-card {
+  animation: missionCardReveal 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ── Rank Stamp ── */
+.rank-stamp {
+  animation: stampPress 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.rank-stamp-lg {
+  animation: stampPress 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+
+/* ── Mission Detail scroll reveal ── */
+.mission-detail-content {
+  animation: scrollUnroll 0.35s ease-out both;
+}
+
+/* ── Shuriken ── */
+.shuriken-spinner {
+  animation: shurikenSpin 0.8s linear infinite;
+}
+
+/* ── Mission CSS Variables ── */
+:root {
+  --mission-page-bg:      linear-gradient(135deg, #070B18 0%, #0A0F22 50%, #080B1A 100%);
+  --mission-nav-bg:       rgba(7,11,24,0.95);
+  --mission-nav-border:   rgba(255,127,42,0.08);
+  --mission-card-bg:      #0D1120;
+  --mission-card-border:  rgba(255,127,42,0.1);
+  --mission-section-bg:   rgba(13,17,32,0.8);
+  --mission-section-bdr:  rgba(255,127,42,0.1);
+  --mission-hero-sub:     #A0824A;
+  --mission-divider:      rgba(255,127,42,0.15);
+  --mission-footer-text:  #6B5020;
+  --mission-footer-bdr:   rgba(255,127,42,0.1);
+}
+[data-theme="light"] {
+  --mission-page-bg:      linear-gradient(135deg, #F2F0EC 0%, #EBE8E0 100%);
+  --mission-nav-bg:       rgba(245,240,232,0.95);
+  --mission-nav-border:   rgba(100,40,0,0.12);
+  --mission-card-bg:      #FDFAF5;
+  --mission-card-border:  rgba(100,40,0,0.12);
+  --mission-section-bg:   rgba(252,250,246,0.95);
+  --mission-section-bdr:  rgba(100,40,0,0.15);
+  --mission-hero-sub:     #6B4C2A;
+  --mission-divider:      rgba(100,40,0,0.18);
+  --mission-footer-text:  #6B4820;
+  --mission-footer-bdr:   rgba(100,40,0,0.15);
+}
+
+/* ── Light theme overrides ── */
+[data-theme="light"] .mission-card {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .mission-card:hover {
+  box-shadow: 0 8px 32px rgba(100,40,0,0.1) !important;
+}
+
+/* ── Mission title gradient text ── */
+.mission-title-grad {
+  background: linear-gradient(135deg, #FF6B00, #FF7F2A, #FFB347);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: missionTitleGlow 3s ease-in-out infinite;
+}
+[data-theme="light"] .mission-title-grad {
+  background: linear-gradient(135deg, #5A2200, #8C4200, #B06020);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Responsive — hide labels on small screens ── */
+@media (hover: none) {
+  /* Touch devices — disable card hover lift so tap navigates cleanly */
+  .mission-card {
+    transition: none !important;
+  }
+  .mission-card:active {
+    opacity: 0.85;
+  }
+}
+
+@media (max-width: 480px) {
+  .mission-nav-title { display: none; }
+  .mission-arena-label { display: none; }
+  .mission-detail-hours { display: none; }
+}

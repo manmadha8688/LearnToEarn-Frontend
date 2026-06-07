@@ -146,4 +146,8 @@ export const getRoadmapStatus  = (roadmapId)       => withCache(`roadmapStatus:$
 export const submitFeedback = (data) => api.post('/feedback', data)
 export const getAllFeedbacks = ()     => api.get('/feedback')
 
+// ─── MISSIONS ─────────────────────────────────────────
+export const getMissions  = ()     => api.get('/missions')
+export const getMission   = (id)   => api.get(`/missions/${id}`)
+
 export default api
