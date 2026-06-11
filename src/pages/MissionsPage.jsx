@@ -44,12 +44,15 @@ export default function MissionsPage() {
   const [searchParams]            = useSearchParams()
   const light                     = theme === 'light'
 
-  // Pre-apply filter when arriving from Skill Arena subject button
+  // Pre-apply filter when arriving from Skill Arena subject or roadmap button
   useEffect(() => {
-    const subjectFromUrl = searchParams.get('subjectTitle')
+    const subjectFromUrl  = searchParams.get('subjectTitle')
+    const categoryFromUrl = searchParams.get('category')
     if (subjectFromUrl) {
       setCategory('subject')
       setSubFilter(subjectFromUrl)
+    } else if (categoryFromUrl === 'role_based') {
+      setCategory('role_based')
     }
   }, [])
 

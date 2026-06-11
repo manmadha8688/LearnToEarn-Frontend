@@ -29,10 +29,11 @@ const TYPE_META = {
   CONCEPTUAL: { label: 'Conceptual',   color: '#94A3B8' },
 }
 const TRACK_LABELS = {
-  START_CODING:   'Start Coding',
-  LOGIC_BUILDING: 'Logic Building',
-  SKILL_UP:       'Skill Up',
-  INTERVIEW_PREP: 'Interview Prep',
+  START_CODING:    'Start Coding',
+  LOGIC_BUILDING:  'Logic Building',
+  SKILL_UP:        'Skill Up',
+  INTERVIEW_PREP:  'Interview Prep',
+  SCENARIO_CODING: 'Scenario Coding',
 }
 
 export default function ProblemDetailPage() {
@@ -49,7 +50,8 @@ export default function ProblemDetailPage() {
   const [variant, setVariant] = useState('normal')
   const [revealedHints, setRevealedHints] = useState(0)
   const [approachOpen, setApproachOpen] = useState(false)
-  const [solutionOpen, setSolutionOpen] = useState(true)
+  const [solutionOpen, setSolutionOpen] = useState(false)
+  const [explanationOpen, setExplanationOpen] = useState(false)
   const [tipOpen, setTipOpen] = useState(false)
 
   useEffect(() => {
@@ -377,8 +379,8 @@ export default function ProblemDetailPage() {
 
           {/* Explanation */}
           {problem.explanation && (
-            <Accordion open={false} onToggle={() => {}} label="Explanation" accentColor="var(--ps-accent)" defaultOpen>
-              <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65, margin: 0 }}>
+            <Accordion open={explanationOpen} onToggle={() => setExplanationOpen(o => !o)} label="Explanation" accentColor="var(--ps-accent)">
+              <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65, margin: 0, whiteSpace: 'pre-wrap' }}>
                 {problem.explanation}
               </p>
             </Accordion>
