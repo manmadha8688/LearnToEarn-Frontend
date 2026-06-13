@@ -71,7 +71,7 @@ const features = [
   { Icon: Swords,   iconD: '#C4B5FD', iconL: '#7C5DBB', label: 'Skills Arena',    status: 'Live',         statusColorD: '#4ADE80', statusColorL: '#15803D', statusBg: 'rgba(74,222,128,0.12)',       desc: 'Structured career roadmaps with concept-by-concept learning, real code examples, quizzes, and XP progression.', glow: 'rgba(155,110,212,0.15)', activeBorder: 'rgba(155,110,212,0.4)', isLive: true },
   { Icon: BookOpen, iconD: '#60A5FA', iconL: '#1D4ED8', label: 'Resume Builder',  status: 'Coming Soon',  statusColorD: '#64748B', statusColorL: '#64748B', statusBg: 'rgba(100,116,139,0.12)', desc: 'Auto-build a proof-of-skills resume from your learning journey and quiz performance.',                              glow: 'rgba(96,165,250,0.07)',  activeBorder: 'rgba(155,110,212,0.18)', isLive: false },
   { Icon: Code2,    iconD: '#0EA5E9', iconL: '#0284C7', label: 'Problem Solving',  status: 'Live',         statusColorD: '#4ADE80', statusColorL: '#15803D', statusBg: 'rgba(74,222,128,0.12)',       desc: 'Five learning tracks — Start Coding, Logic Building, Skill Up, Interview Prep, and Scenario Coding — with solutions in C, Python, Java, and C++.', glow: 'rgba(14,165,233,0.1)', activeBorder: 'rgba(14,165,233,0.25)', isLive: true, href: '/problem-solving' },
-  { Icon: Briefcase,iconD: '#4ADE80', iconL: '#15803D', label: 'Jobs Board',      status: 'Coming Soon',  statusColorD: '#64748B', statusColorL: '#64748B', statusBg: 'rgba(100,116,139,0.12)', desc: 'Curated job listings matched to your skill level and completed roadmap badges.',                                   glow: 'rgba(74,222,128,0.07)',  activeBorder: 'rgba(155,110,212,0.18)', isLive: false },
+  { Icon: Briefcase,iconD: '#4ADE80', iconL: '#15803D', label: 'Walk-In Jobs',    status: 'Live',         statusColorD: '#4ADE80', statusColorL: '#15803D', statusBg: 'rgba(74,222,128,0.12)',       desc: 'Live walk-in interview updates posted by students and community. Find opportunities near you.',              glow: 'rgba(74,222,128,0.12)', activeBorder: 'rgba(74,222,128,0.3)',   isLive: true,  href: '/walk-ins', cta: 'View Walk-Ins' },
 ]
 
 const steps = [
@@ -84,7 +84,7 @@ const NAV_LINKS = [
   { label: 'Missions',     live: true, href: '/missions' },
   { label: 'Code GYM',    live: true, href: '/problem-solving' },
   { label: 'Resume', live: false },
-  { label: 'Jobs', live: false },
+  { label: 'Walk-Ins', live: true, href: '/walk-ins' },
   { label: 'Feedback', live: true, scrollTo: 'feedback' }
 ]
 
@@ -653,7 +653,7 @@ export default function LandingPage() {
                     display: 'flex', alignItems: 'center', gap: '0.375rem',
                     color: f.href ? '#0EA5E9' : (lt ? C.primary : '#C4B5FD'), fontSize: '0.875rem', fontWeight: 600,
                   }}>
-                    {f.href ? 'Start Solving' : 'Enter Arena'} <ArrowRight size={14} />
+                    {f.cta || (f.href ? 'Start Solving' : 'Enter Arena')} <ArrowRight size={14} />
                   </div>
                 )}
               </div>

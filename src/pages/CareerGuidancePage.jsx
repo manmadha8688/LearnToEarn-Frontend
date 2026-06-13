@@ -11,7 +11,10 @@ const ROLES = [
   {
     emoji: '🎨', title: 'Frontend Developer',
     demand: 'Very High', color: '#60A5FA',
-    desc: 'You build what users see — buttons, pages, animations. If you love design + coding, this is your space.',
+    desc: 'You build what users see and experience — layouts, animations, interactions. If seeing your work come alive in a browser excites you, this path will keep you motivated.',
+    passion: 'Good fit if you enjoy visual design, care about how things look and feel, and like immediate visual feedback when you write code.',
+    aiImpact: 'AI generates UI code fast — but design judgment, UX thinking, and knowing why something feels right is human. Your value moves toward product sense, not just code.',
+    future: 'Growing. Design-engineering hybrid roles are emerging. React skills stay in demand for years.',
     skills: ['HTML', 'CSS', 'JavaScript', 'React or Vue'],
     salary: '₹3.5L – ₹8L (fresher)',
     timeToJob: '6–9 months',
@@ -19,7 +22,10 @@ const ROLES = [
   {
     emoji: '⚙️', title: 'Backend Developer',
     demand: 'Very High', color: '#4ADE80',
-    desc: 'You build the engine behind the app — APIs, databases, business logic. More logic-heavy, less design.',
+    desc: 'You build the invisible engine — APIs, databases, authentication, business logic. If you enjoy solving puzzles and thinking about how systems work, this is your space.',
+    passion: 'Good fit if you like logic over visuals, enjoy thinking about performance and data flow, and do not need instant visual results to feel satisfied.',
+    aiImpact: 'AI writes boilerplate REST APIs quickly — but system design, performance under load, security architecture, and debugging complex failures need human thinking.',
+    future: 'Very stable. Every product company needs strong backend. Java and Python backend roles are a long-term career.',
     skills: ['Java or Python or Node.js', 'SQL', 'REST APIs', 'Spring Boot or Django'],
     salary: '₹4L – ₹10L (fresher)',
     timeToJob: '8–12 months',
@@ -27,7 +33,10 @@ const ROLES = [
   {
     emoji: '🔗', title: 'Full Stack Developer',
     demand: 'Highest', color: '#9B6ED4',
-    desc: 'You do both frontend and backend. Startups love this — one person who can build complete features.',
+    desc: 'You own the full product — frontend, backend, database, deployment. Startups love this because one person can ship a complete feature without waiting on others.',
+    passion: 'Good fit if you want to build complete products and like variety in your work. Be honest — this takes more time to learn. Do not choose it just because demand is high.',
+    aiImpact: 'AI helps across the stack, but integration thinking — understanding how frontend, backend, and DB talk to each other — is where full stack developers show their value.',
+    future: 'Highest fresher demand for the next 5+ years. Startups, GCCs, and product companies all want this.',
     skills: ['HTML/CSS/JS', 'React', 'Node.js or Java', 'MongoDB or SQL'],
     salary: '₹4L – ₹12L (fresher)',
     timeToJob: '10–14 months',
@@ -35,32 +44,44 @@ const ROLES = [
   {
     emoji: '📊', title: 'Data Analyst',
     demand: 'High', color: '#F59E0B',
-    desc: 'You analyse business data to find patterns and insights. More Excel + SQL than coding. Great for non-CS too.',
+    desc: 'You turn raw numbers into decisions. You pull data, find patterns, build dashboards, and tell a story with numbers. Less coding, more business thinking.',
+    passion: 'Good fit if you enjoy working with data, asking "why is this number different?", and communicating findings to non-technical people. Excel and SQL should feel satisfying, not painful.',
+    aiImpact: 'AI can generate SQL and charts — but understanding the business question behind the data, knowing what to look for, and presenting it in a way people trust — that is you.',
+    future: 'Growing fast. Every company now makes decisions with data. Entry bar is lower than development, but communication skills matter a lot here.',
     skills: ['Excel', 'SQL', 'Python basics', 'Power BI or Tableau'],
     salary: '₹3L – ₹7L (fresher)',
     timeToJob: '5–8 months',
   },
   {
-    emoji: '🤖', title: 'Data Scientist / ML',
-    demand: 'High', color: '#EF4444',
-    desc: 'Build AI models and prediction systems. Needs strong maths. Not a beginner path — build basics first.',
-    skills: ['Python', 'Statistics', 'ML libraries', 'Deep Learning'],
+    emoji: '🤖', title: 'Data Scientist / ML Engineer',
+    demand: 'High (but competitive)', color: '#EF4444',
+    desc: 'You build AI models — prediction systems, recommendation engines, classification. This requires strong maths and real curiosity about how machines learn.',
+    passion: 'Only choose this if you genuinely enjoy statistics, maths, and reading research. If you are choosing it because "AI is the future" but do not actually enjoy the work — you will struggle and burn out.',
+    aiImpact: 'Ironically, the rise of AI has made this role more important AND more competitive. You need to understand models deeply — not just call APIs. The bar keeps rising.',
+    future: 'Highest ceiling of all roles. Also the hardest path. Do not start here — build strong Python and maths basics first.',
+    skills: ['Python', 'Statistics + Linear Algebra', 'ML libraries', 'Deep Learning basics'],
     salary: '₹5L – ₹15L',
     timeToJob: '12–18 months',
   },
   {
     emoji: '🛡️', title: 'QA / Test Engineer',
-    demand: 'Steady', color: '#34D399',
-    desc: 'You find bugs before users do. Underrated and very stable. Great entry point with less coding pressure.',
-    skills: ['Manual Testing', 'Selenium or Cypress', 'JIRA', 'API Testing'],
+    demand: 'Shifting', color: '#34D399',
+    desc: 'You find bugs before users do. You think like a user trying to break the product. Good QA engineers are underrated and genuinely save companies from disasters.',
+    passion: 'Good fit if you have a detail-oriented mindset and enjoy finding edge cases. But be honest: manual testing alone is shrinking. You must learn automation to stay relevant.',
+    aiImpact: 'AI is automating manual test case generation. If your only skill is manual testing, this role will shrink for you. Learn Selenium, Playwright, or Cypress — automation QA is still in demand.',
+    future: 'Manual QA is declining. Automation QA is stable. If you enter this path, commit to automation skills from day one.',
+    skills: ['Selenium or Playwright or Cypress', 'JIRA', 'API Testing (Postman)', 'Basic Java or Python'],
     salary: '₹2.5L – ₹6L (fresher)',
     timeToJob: '4–7 months',
   },
   {
-    emoji: '☁️', title: 'DevOps / Cloud',
+    emoji: '☁️', title: 'DevOps / Cloud Engineer',
     demand: 'Growing Fast', color: '#A78BFA',
-    desc: 'Deploy and manage applications on cloud (AWS, Azure). More infrastructure than development.',
-    skills: ['Linux', 'AWS basics', 'Docker', 'CI/CD pipelines'],
+    desc: 'You make sure software actually runs in production — deployments, infrastructure, monitoring, scaling. More infrastructure than development, but very impactful work.',
+    passion: 'Good fit if you enjoy working with systems, enjoy automation of repetitive tasks, and like the idea of keeping critical applications running at scale.',
+    aiImpact: 'AI helps write deployment configs and scripts — but infrastructure decisions, security configurations, and knowing what to do when production breaks at 2am cannot be automated.',
+    future: 'Fastest growing among all paths. Least competition from freshers (most skip this). Cloud certifications (AWS, Azure) open doors quickly.',
+    skills: ['Linux basics', 'AWS or Azure basics', 'Docker', 'CI/CD with GitHub Actions'],
     salary: '₹4L – ₹10L',
     timeToJob: '10–14 months',
   },
@@ -101,10 +122,9 @@ const ROADMAP = {
   title: 'Full Stack Web Developer',
   subtitle: 'Strongest beginner path with the most job options',
   color: '#9B6ED4',
-  duration: '12–14 months if consistent',
   steps: [
     {
-      phase: 'Month 1–2', title: 'Build the Foundation',
+      phase: 'Stage 1', title: 'Build the Foundation',
       items: [
         'HTML — structure of web pages (2 weeks)',
         'CSS — styling, Flexbox, Grid, responsive design (3 weeks)',
@@ -114,7 +134,7 @@ const ROADMAP = {
       tip: 'Most students rush to JavaScript without mastering HTML/CSS. This is where they struggle later.',
     },
     {
-      phase: 'Month 3–5', title: 'Learn JavaScript Properly',
+      phase: 'Stage 2', title: 'Learn JavaScript Properly',
       items: [
         'JavaScript fundamentals: variables, loops, functions, arrays, objects',
         'DOM manipulation — make pages interactive',
@@ -124,7 +144,7 @@ const ROADMAP = {
       tip: 'Understand JavaScript deeply — not just syntax. Ask "why" not just "how".',
     },
     {
-      phase: 'Month 6–8', title: 'React — Modern Frontend',
+      phase: 'Stage 3', title: 'React — Modern Frontend',
       items: [
         'React basics: components, props, state, hooks',
         'React Router — multiple pages in one app',
@@ -134,7 +154,7 @@ const ROADMAP = {
       tip: 'React is the #1 frontend skill companies look for. Learn it properly.',
     },
     {
-      phase: 'Month 9–11', title: 'Backend with Node.js',
+      phase: 'Stage 4', title: 'Backend with Node.js',
       items: [
         'Node.js + Express — build APIs',
         'MongoDB or MySQL — store data',
@@ -144,7 +164,7 @@ const ROADMAP = {
       tip: 'Now your projects are real — they have a database, login, and real data.',
     },
     {
-      phase: 'Month 12–14', title: 'Job Prep',
+      phase: 'Stage 5', title: 'Job Prep',
       items: [
         'Deploy your project online (Vercel + Render or Railway)',
         'Polish your GitHub profile — clean code, good README',
@@ -159,34 +179,39 @@ const ROADMAP = {
 
 const MISTAKES = [
   {
-    mistake: 'Learning too many languages at once',
-    reality: 'Master one. A student who knows JavaScript well beats someone who "knows" 5 languages shallowly.',
+    mistake: 'Choosing a path because of salary, not interest',
+    reality: 'You might get the job. But you will struggle to grow in work you do not enjoy. The people who become really good at something are the ones who find it genuinely interesting. Passion is not a luxury — it is the energy that keeps you going when learning gets hard.',
+    icon: '💔',
+  },
+  {
+    mistake: 'Following what your friend or batch is doing',
+    reality: 'Your friend choosing Data Science does not mean Data Science is right for you. Research for yourself — open LinkedIn, search job postings in your city, see what companies are actually asking for. Make a decision based on your interests and real market data, not peer pressure.',
+    icon: '🐑',
+  },
+  {
+    mistake: 'Learning too many technologies at once',
+    reality: 'Pick one path and go 6 months deep before touching anything else. Someone who knows React well will always beat someone who "knows" React, Angular, Vue, and Svelte at surface level.',
     icon: '❌',
   },
   {
     mistake: 'Tutorial hell — watching, never building',
-    reality: 'After every tutorial, immediately build something similar without watching. That\'s when real learning happens.',
+    reality: 'Watching a tutorial feels productive. It is not. After every tutorial, close the video and rebuild it from memory. That struggle is where real learning happens. No struggle = no learning.',
     icon: '📺',
   },
   {
     mistake: 'Copying projects without understanding',
-    reality: 'In interviews, they will ask: "Explain this line of code." If you copied it, you can\'t answer.',
+    reality: 'In interviews, they will ask "explain this line." If you copied it, you go silent. That ends interviews immediately. Every line on your resume must be something you can own.',
     icon: '📋',
   },
   {
-    mistake: 'Waiting to be "ready" to apply',
-    reality: 'You will never feel fully ready. Start applying at 60–70% ready. Interviews teach you what to learn next.',
+    mistake: 'Ignoring AI tools entirely OR depending on them completely',
+    reality: 'Both extremes are wrong. Not using AI tools means you work slower than peers who do. Depending on AI without understanding means you cannot explain your own work. Use AI as a co-pilot, not as a replacement for your brain.',
+    icon: '🤖',
+  },
+  {
+    mistake: 'Waiting until placement season to start',
+    reality: 'Preparation that starts 2 months before campus placement is panic, not preparation. Real skills take 6–12 months of consistent building. Start now, even if placement is a year away.',
     icon: '⏳',
-  },
-  {
-    mistake: 'Ignoring DSA and problem solving',
-    reality: 'Product companies test DSA heavily. Even service companies are testing it now. Don\'t skip it.',
-    icon: '🧩',
-  },
-  {
-    mistake: 'No portfolio, no GitHub',
-    reality: 'Your GitHub is your silent resume. Recruiters check it. Empty GitHub = red flag.',
-    icon: '👻',
   },
 ]
 
@@ -278,7 +303,7 @@ export default function CareerGuidancePage() {
           border: '1px solid rgba(155,110,212,0.25)', borderRadius: 20,
           padding: '0.3rem 1rem', marginBottom: '1.25rem',
         }}>
-          ◈ FROM A SENIOR DEVELOPER — FOR YOU
+          ◈ YOUR PATH — YOUR CHOICE — YOUR FUTURE
         </div>
 
         <h1 className="cg-hero-title pg-hero-2" style={{
@@ -286,19 +311,21 @@ export default function CareerGuidancePage() {
           fontSize: 'clamp(1.75rem, 5vw, 3rem)', letterSpacing: '0.05em',
           lineHeight: 1.15, margin: '0 0 1.25rem',
         }}>
-          Stop Being Confused.<br />Start Moving Forward.
+          Find Your Path.<br />Own Your Direction.
         </h1>
 
         <p className="pg-hero-3" style={{
           fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', color: C.sub,
-          maxWidth: 580, margin: '0 auto 0',
+          maxWidth: 600, margin: '0 auto 0',
           lineHeight: 1.75,
         }}>
-          I've been in this industry for 15+ years. I've hired freshers, mentored them, and seen what works and what doesn't. This is the honest guide nobody told you.
+          The biggest confusion for freshers is not the lack of options — it is too many options with no clarity.
+          This guide helps you figure out what actually fits you, what the future of each role looks like,
+          and how to research what companies in your city are actually hiring for right now.
         </p>
       </div>
 
-      {/* ── Mentor Note ── */}
+      {/* ── Honest Intro ── */}
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 800, margin: '0 auto', padding: '0 1.25rem 2.5rem' }}>
         <div style={{
           background: C.card, border: `1px solid rgba(155,110,212,0.25)`,
@@ -306,127 +333,116 @@ export default function CareerGuidancePage() {
           padding: '1.5rem 1.75rem',
           boxShadow: light ? '0 4px 20px rgba(155,110,212,0.08)' : '0 4px 20px rgba(0,0,0,0.3)',
         }}>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-            <div style={{
-              width: 44, height: 44, borderRadius: '50%', flexShrink: 0,
-              background: 'linear-gradient(135deg, #7C3AED, #9B6ED4)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '1.25rem',
-            }}>🧑‍💻</div>
-            <div>
-              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#9B6ED4', marginBottom: '0.5rem', fontFamily: "'Share Tech Mono', monospace", letterSpacing: '0.06em' }}>MENTOR SAYS</div>
-              <p style={{ color: C.sub, fontSize: '0.95rem', lineHeight: 1.75, margin: 0 }}>
-                "Every week I talk to freshers who are lost — they've watched 200 hours of tutorials, learned 4 languages, and still don't know where to start. The problem isn't effort. It's direction. This page gives you that direction. Read it once, then take action."
-              </p>
-            </div>
+          <div style={{ fontWeight: 700, fontSize: '0.8rem', color: '#9B6ED4', marginBottom: '0.875rem', fontFamily: "'Share Tech Mono', monospace", letterSpacing: '0.08em' }}>
+            BEFORE YOU PICK A ROLE — READ THIS
           </div>
+          <p style={{ color: C.sub, fontSize: '0.95rem', lineHeight: 1.8, margin: '0 0 0.75rem' }}>
+            Every year, freshers pick a tech stack for the wrong reasons — because a YouTube video made it look cool, because a friend is doing it, because someone said it pays well. They spend 12 months learning something, get a job, and hate the work within 6 months.
+          </p>
+          <p style={{ color: C.sub, fontSize: '0.95rem', lineHeight: 1.8, margin: 0 }}>
+            The right path is the one that matches what you genuinely find interesting. Before reading further — ask yourself one honest question: <strong style={{ color: C.text }}>What kind of work could I do for 8 hours and not feel drained?</strong> That answer matters more than any salary figure on this page.
+          </p>
         </div>
       </div>
 
       {/* ── Section 1: Choose Role First ── */}
-      <Section title="01 — Choose Your Role First, Not the Language" color="#EF4444" C={C}>
+      <Section title="01 — Start With What Interests You, Not What Pays More" color="#EF4444" C={C}>
         <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1.25rem' }}>
-          This is the <strong style={{ color: C.text }}>biggest mistake freshers make</strong> — they start with "should I learn Python or Java?" That's the wrong question.
+          The most common advice students get is wrong — "pick the highest paying role." That leads to choosing a path you do not enjoy, grinding through it, and burning out before you even reach a good salary.
         </p>
-        <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1.25rem' }}>
-          The right question is: <strong style={{ color: '#9B6ED4' }}>"What kind of work do I want to do every day?"</strong>
+        <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1rem' }}>
+          Here is the truth: <strong style={{ color: C.text }}>people who enjoy their work get better faster. People who get better faster get paid more.</strong> Passion is not just a nice feeling — it is a career advantage.
         </p>
         <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1.5rem' }}>
-          Think about it this way — a doctor doesn't choose a hospital before choosing a specialty. A chef doesn't buy tools before deciding what cuisine to cook. You pick the destination first, then figure out the vehicle.
+          Answer these honestly. Do not answer what you think you should say — answer what is actually true for you:
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
           {[
-            { q: 'Do you enjoy visuals, design, UI?', a: '→ Frontend Development' },
-            { q: 'Do you love logic, systems, problem solving?', a: '→ Backend Development' },
-            { q: 'Do you want max job options?', a: '→ Full Stack Development' },
-            { q: 'Are you good at Excel, numbers, business?', a: '→ Data Analyst' },
-            { q: 'Do you want stability with less pressure?', a: '→ QA / Testing' },
-            { q: 'Interested in AI, statistics, research?', a: '→ Data Science / ML' },
+            { q: 'When I see a beautiful website, I want to know how they built it', a: '→ Frontend Development' },
+            { q: 'I enjoy figuring out why something does not work and fixing it', a: '→ Backend Development' },
+            { q: 'I want to build complete products end-to-end on my own', a: '→ Full Stack Development' },
+            { q: 'I enjoy working with numbers, spreadsheets, and finding patterns', a: '→ Data Analyst' },
+            { q: 'I want to understand how AI models actually work, not just use them', a: '→ Data Science / ML' },
+            { q: 'I think like someone trying to break things, not just build them', a: '→ QA / Automation Testing' },
+            { q: 'I enjoy systems, servers, and making things run reliably at scale', a: '→ DevOps / Cloud' },
           ].map((item, i) => (
             <div key={i} style={{
               background: light ? 'rgba(155,110,212,0.05)' : 'rgba(155,110,212,0.07)',
               border: `1px solid ${C.border}`, borderRadius: 10,
               padding: '0.875rem 1rem',
             }}>
-              <div style={{ fontSize: '0.875rem', color: C.sub, marginBottom: '0.4rem' }}>{item.q}</div>
-              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#9B6ED4' }}>{item.a}</div>
+              <div style={{ fontSize: '0.85rem', color: C.sub, marginBottom: '0.5rem', lineHeight: 1.6 }}>{item.q}</div>
+              <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#9B6ED4' }}>{item.a}</div>
             </div>
           ))}
+        </div>
+        <div style={{
+          padding: '1rem 1.25rem', background: 'rgba(239,68,68,0.06)',
+          border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10,
+        }}>
+          <p style={{ color: C.sub, fontSize: '0.9rem', lineHeight: 1.75, margin: 0 }}>
+            <strong style={{ color: '#EF4444' }}>Honest warning:</strong> Do not choose a role only because someone said "that's where AI won't replace you" or "that pays the most right now." Markets change. Technologies change. The one constant is your ability to grow — and you grow fastest in work that interests you.
+          </p>
         </div>
       </Section>
 
       {/* ── Section 2: In-demand Roles ── */}
-      <Section title="02 — In-Demand Roles Right Now" color="#3B82F6" C={C}>
-        <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1.5rem' }}>
-          Here's the honest breakdown of what's actually hiring, what pays well, and how long it takes a fresher to get in:
+      <Section title="02 — Every Role Explained Honestly" color="#3B82F6" C={C}>
+        <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, marginBottom: '0.75rem' }}>
+          For each role: what the work actually feels like, who it genuinely suits, how AI is changing it, and what the future looks like.
         </p>
-        {/* Quick Comparison Table */}
-        <div className="pg-reveal" style={{ overflowX: 'auto', marginBottom: '1.75rem' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', fontFamily: "'Rajdhani', sans-serif" }}>
-            <thead>
-              <tr style={{ background: light ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)' }}>
-                {['Role','Demand','Salary (Fresher)','Time to Job','Best For'].map(h => (
-                  <th key={h} style={{ padding: '0.625rem 0.875rem', textAlign: 'left', fontWeight: 700, fontSize: '0.7rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: C.muted, borderBottom: `1px solid ${C.border}`, whiteSpace: 'nowrap' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {ROLES.map((role, i) => (
-                <tr key={i} style={{ borderBottom: `1px solid ${C.border}`, transition: 'background 0.15s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = light ? 'rgba(0,0,0,0.025)' : 'rgba(255,255,255,0.025)'}
-                  onMouseLeave={e => e.currentTarget.style.background = ''}
-                >
-                  <td style={{ padding: '0.625rem 0.875rem', whiteSpace: 'nowrap' }}>
-                    <span style={{ marginRight: 6 }}>{role.emoji}</span>
-                    <span style={{ fontWeight: 700, color: role.color }}>{role.title}</span>
-                  </td>
-                  <td style={{ padding: '0.625rem 0.875rem' }}>
-                    <span style={{ fontSize: '0.65rem', background: `${role.color}15`, color: role.color, border: `1px solid ${role.color}30`, borderRadius: 4, padding: '0.1rem 0.45rem' }}>{role.demand}</span>
-                  </td>
-                  <td style={{ padding: '0.625rem 0.875rem', color: C.sub, whiteSpace: 'nowrap' }}>{role.salary}</td>
-                  <td style={{ padding: '0.625rem 0.875rem', color: C.sub, whiteSpace: 'nowrap' }}>{role.timeToJob}</td>
-                  <td style={{ padding: '0.625rem 0.875rem', color: C.muted, fontSize: '0.78rem' }}>{role.skills.slice(0,2).join(', ')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <p style={{ color: C.sub, fontSize: '0.875rem', lineHeight: 1.7, marginBottom: '1.75rem', fontStyle: 'italic' }}>
+          Also do your own research — open LinkedIn, search fresher jobs in your city, look at 10–15 real job postings for each role you are considering. See what skills they actually ask for. That data is more accurate than any guide.
+        </p>
 
-        <div className="pg-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%,320px), 1fr))', gap: '1rem' }}>
+        <div className="pg-stagger" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {ROLES.map((role, i) => (
-            <div key={i} className="pg-reveal pg-role-card" style={{
+            <div key={i} className="pg-reveal" style={{
               background: C.card, border: `1px solid ${C.border}`,
-              borderTop: `3px solid ${role.color}`,
-              borderRadius: 12, padding: '1.25rem',
+              borderLeft: `4px solid ${role.color}`,
+              borderRadius: 12, padding: '1.375rem',
               boxShadow: light ? '0 2px 12px rgba(0,0,0,0.06)' : 'none',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                <span style={{ fontSize: '1.5rem' }}>{role.emoji}</span>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: '1rem', color: C.text }}>{role.title}</div>
-                  <span style={{
-                    fontSize: '0.62rem', fontFamily: "'Share Tech Mono', monospace",
-                    letterSpacing: '0.08em', color: role.color,
-                    background: `${role.color}15`, border: `1px solid ${role.color}30`,
-                    borderRadius: 4, padding: '0.1rem 0.4rem',
-                  }}>
-                    {role.demand}
-                  </span>
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.875rem' }}>
+                <span style={{ fontSize: '1.6rem' }}>{role.emoji}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, fontSize: '1.05rem', color: C.text }}>{role.title}</div>
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.25rem' }}>
+                    <span style={{ fontSize: '0.62rem', fontFamily: "'Share Tech Mono', monospace", letterSpacing: '0.08em', color: role.color, background: `${role.color}15`, border: `1px solid ${role.color}30`, borderRadius: 4, padding: '0.1rem 0.4rem' }}>
+                      {role.demand}
+                    </span>
+                    <span style={{ fontSize: '0.62rem', color: C.muted, fontFamily: "'Share Tech Mono', monospace" }}>
+                      💰 {role.salary} · ⏱ {role.timeToJob}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <p style={{ fontSize: '0.85rem', color: C.sub, lineHeight: 1.6, margin: '0 0 0.875rem' }}>{role.desc}</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '0.75rem' }}>
-                {role.skills.map(s => (
-                  <span key={s} style={{
-                    fontSize: '0.7rem', background: `${role.color}12`,
-                    color: role.color, border: `1px solid ${role.color}25`,
-                    borderRadius: 5, padding: '0.15rem 0.5rem',
-                  }}>{s}</span>
-                ))}
+
+              {/* Description */}
+              <p style={{ fontSize: '0.875rem', color: C.sub, lineHeight: 1.7, margin: '0 0 0.875rem' }}>{role.desc}</p>
+
+              {/* 3 columns */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%,200px), 1fr))', gap: '0.75rem', marginBottom: '0.875rem' }}>
+                <div style={{ padding: '0.75rem', background: `${role.color}08`, border: `1px solid ${role.color}20`, borderRadius: 8 }}>
+                  <div style={{ fontSize: '0.6rem', fontFamily: "'Share Tech Mono', monospace", color: role.color, letterSpacing: '0.1em', marginBottom: '0.375rem' }}>WHO IT FITS</div>
+                  <p style={{ fontSize: '0.78rem', color: C.sub, lineHeight: 1.6, margin: 0 }}>{role.passion}</p>
+                </div>
+                <div style={{ padding: '0.75rem', background: 'rgba(6,182,212,0.06)', border: '1px solid rgba(6,182,212,0.15)', borderRadius: 8 }}>
+                  <div style={{ fontSize: '0.6rem', fontFamily: "'Share Tech Mono', monospace", color: '#06B6D4', letterSpacing: '0.1em', marginBottom: '0.375rem' }}>AI IMPACT</div>
+                  <p style={{ fontSize: '0.78rem', color: C.sub, lineHeight: 1.6, margin: 0 }}>{role.aiImpact}</p>
+                </div>
+                <div style={{ padding: '0.75rem', background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.15)', borderRadius: 8 }}>
+                  <div style={{ fontSize: '0.6rem', fontFamily: "'Share Tech Mono', monospace", color: '#22C55E', letterSpacing: '0.1em', marginBottom: '0.375rem' }}>FUTURE OUTLOOK</div>
+                  <p style={{ fontSize: '0.78rem', color: C.sub, lineHeight: 1.6, margin: 0 }}>{role.future}</p>
+                </div>
               </div>
-              <div style={{ display: 'flex', gap: '1rem', fontSize: '0.78rem' }}>
-                <span style={{ color: C.muted }}>💰 {role.salary}</span>
-                <span style={{ color: C.muted }}>⏱ {role.timeToJob}</span>
+
+              {/* Skills */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                {role.skills.map(s => (
+                  <span key={s} style={{ fontSize: '0.7rem', background: `${role.color}12`, color: role.color, border: `1px solid ${role.color}25`, borderRadius: 5, padding: '0.15rem 0.5rem' }}>{s}</span>
+                ))}
               </div>
             </div>
           ))}
@@ -434,44 +450,47 @@ export default function CareerGuidancePage() {
       </Section>
 
       {/* ── Section 3: Best Paths for Beginners ── */}
-      <Section title="03 — Best Paths for Beginners (With Honest Reasoning)" color="#8B5CF6" C={C}>
+      <Section title="03 — If You Are Still Unsure, Start Here" color="#8B5CF6" C={C}>
+        <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1.5rem' }}>
+          If after reading the roles above you are still genuinely unsure, here are the paths that give beginners the most clarity, the most job options, and the best chance of building confidence early. These are not the "best" paths for everyone — they are the best starting points for most.
+        </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%,340px), 1fr))', gap: '1.25rem' }}>
           {[
             {
-              rank: '🥇 #1', title: 'Full Stack Web Dev', color: '#9B6ED4',
-              why: 'Highest job volume. Startups + MNCs both hire. One path covers frontend + backend. Best ROI for time invested.',
-              realistic: 'Takes longer (12–14 months) but gives you the most options.',
+              rank: '1', title: 'Full Stack Web Dev', color: '#9B6ED4',
+              why: 'Highest job volume across all company types — startups, GCCs, product companies, and service companies. One path covers both frontend and backend, which gives you the most flexibility.',
+              honest: 'Takes 12–14 months of consistent work. Do not choose this just because demand is high — choose it because building full products excites you.',
             },
             {
-              rank: '🥈 #2', title: 'Frontend Developer', color: '#60A5FA',
-              why: 'Fastest way to get visible results. You can show people what you built. React skills are very high demand.',
-              realistic: 'Product companies want strong React + JavaScript fundamentals.',
+              rank: '2', title: 'Frontend Developer', color: '#60A5FA',
+              why: 'Fastest path to building something you can show people. React is the most in-demand frontend skill in India right now. Shorter learning curve than full stack.',
+              honest: 'If you love design + code and want visible results quickly, this is genuinely satisfying work.',
             },
             {
-              rank: '🥉 #3', title: 'Data Analyst', color: '#F59E0B',
-              why: 'Lower coding barrier. Great for non-CS background. Excel + SQL + Python basics is enough to start.',
-              realistic: 'Not glamorous but very stable. Every business needs data people.',
+              rank: '3', title: 'Data Analyst', color: '#F59E0B',
+              why: 'Lower coding barrier than development paths. Great for non-CS backgrounds. Excel + SQL + Python basics is enough to get started. Every company needs people who can read data.',
+              honest: 'This path suits people who enjoy business context and communication, not just coding. If numbers and insights excite you more than building features — this is your path.',
             },
             {
-              rank: '4️⃣ #4', title: 'Backend (Java)', color: '#4ADE80',
-              why: 'Best for corporate / banking / government tech jobs. Java Spring Boot is the most stable tech stack in India.',
-              realistic: 'Takes more time to learn. But once you get in, growth is very solid.',
+              rank: '4', title: 'Backend Developer (Java)', color: '#4ADE80',
+              why: 'Java Spring Boot is the most stable enterprise tech stack in India. Banks, insurance companies, MNCs, and government tech projects all run on Java. Slower to learn, but very stable once you are in.',
+              honest: 'Choose this if you prefer deep logic over visual results and want a corporate, stable career track.',
             },
           ].map((p, i) => (
             <div key={i} style={{
               background: C.card, border: `1px solid ${C.border}`,
               borderRadius: 12, padding: '1.25rem',
             }}>
-              <div style={{ marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.75rem', color: p.color, fontWeight: 700, fontFamily: "'Share Tech Mono', monospace" }}>{p.rank}</span>
-                <div style={{ fontWeight: 700, fontSize: '1.05rem', color: C.text, marginTop: '0.25rem' }}>{p.title}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.625rem' }}>
+                <div style={{ width: 28, height: 28, borderRadius: '50%', background: `${p.color}20`, border: `1.5px solid ${p.color}50`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Orbitron', sans-serif", fontSize: '0.6rem', fontWeight: 700, color: p.color, flexShrink: 0 }}>{p.rank}</div>
+                <div style={{ fontWeight: 700, fontSize: '1.05rem', color: C.text }}>{p.title}</div>
               </div>
-              <p style={{ fontSize: '0.875rem', color: C.sub, lineHeight: 1.7, margin: '0 0 0.75rem' }}>
-                <strong style={{ color: C.text }}>Why this:</strong> {p.why}
-              </p>
-              <p style={{ fontSize: '0.825rem', color: C.muted, lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
-                💡 {p.realistic}
-              </p>
+              <p style={{ fontSize: '0.875rem', color: C.sub, lineHeight: 1.7, margin: '0 0 0.75rem' }}>{p.why}</p>
+              <div style={{ padding: '0.625rem 0.875rem', background: `${p.color}08`, border: `1px solid ${p.color}20`, borderRadius: 8 }}>
+                <p style={{ fontSize: '0.8rem', color: C.muted, lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
+                  <strong style={{ color: p.color, fontStyle: 'normal' }}>Be honest with yourself:</strong> {p.honest}
+                </p>
+              </div>
             </div>
           ))}
         </div>
@@ -521,7 +540,6 @@ export default function CareerGuidancePage() {
           <span style={{ fontSize: '1.5rem' }}>🗺️</span>
           <div>
             <div style={{ fontWeight: 700, color: C.text }}>{ROADMAP.subtitle}</div>
-            <div style={{ fontSize: '0.8rem', color: C.muted }}>⏱ {ROADMAP.duration}</div>
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -570,7 +588,7 @@ export default function CareerGuidancePage() {
                       background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)',
                       borderRadius: 8,
                     }}>
-                      <span style={{ fontSize: '0.75rem', color: '#F59E0B', fontFamily: "'Share Tech Mono', monospace", letterSpacing: '0.08em' }}>⚡ MENTOR TIP: </span>
+                      <span style={{ fontSize: '0.75rem', color: '#F59E0B', fontFamily: "'Share Tech Mono', monospace", letterSpacing: '0.08em' }}>⚡ REALITY: </span>
                       <span style={{ fontSize: '0.825rem', color: C.sub }}>{step.tip}</span>
                     </div>
                   </div>
@@ -582,18 +600,21 @@ export default function CareerGuidancePage() {
       </Section>
 
       {/* ── Section 6: What Companies Expect ── */}
-      <Section title="06 — What Companies Actually Expect from Freshers" color="#4ADE80" C={C}>
-        <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1.5rem' }}>
-          I've sat on both sides of the interview table. Here's what actually matters when hiring freshers:
+      <Section title="06 — What Companies Actually Look For in Freshers" color="#4ADE80" C={C}>
+        <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1rem' }}>
+          This has shifted. The companies hiring right now are not looking for perfect knowledge — they are looking for specific signals that tell them you can learn, build, and communicate.
+        </p>
+        <p style={{ color: C.sub, fontSize: '0.875rem', lineHeight: 1.7, marginBottom: '1.5rem', fontStyle: 'italic' }}>
+          A tip: before any interview, research that specific company. Check their LinkedIn, their job postings, their tech blog if they have one. Companies tell you exactly what they value — most candidates just do not bother to read it.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%,300px), 1fr))', gap: '1rem' }}>
           {[
-            { icon: '🧠', title: 'Strong Fundamentals', desc: 'If you say you know Java, you should know OOP, data types, loops, exceptions. Not just "I watched a tutorial".' },
-            { icon: '🔬', title: 'Can You Explain Your Project?', desc: 'Every line. Why you chose this approach, what problems you faced, how you solved them. This separates real work from copy-paste.' },
-            { icon: '🗣️', title: 'Communication Skills', desc: 'Technical knowledge + inability to explain = won\'t get hired. Practice explaining things simply.' },
-            { icon: '📝', title: 'Problem Solving Basics', desc: 'You don\'t need to crack FAANG-level DSA. But you should solve basic array, string, and logic problems.' },
-            { icon: '🤝', title: 'Willingness to Learn', desc: 'This is huge. Every good manager wants someone who asks good questions and is hungry to improve.' },
-            { icon: '🛠️', title: 'Real, Live Projects', desc: 'A project deployed online and working beats 10 half-finished local projects. Quality over quantity.' },
+            { icon: '🧠', title: 'Strong Fundamentals', desc: 'If your resume says Java or Python, you must be able to explain OOP, exceptions, data flow, and write code without AI help in an interview. "I watched tutorials" is not preparation.' },
+            { icon: '🔬', title: 'Own Your Projects', desc: 'They will ask "why did you choose this database?", "how does your authentication work?", "what would you do differently?". If you cannot answer, the project works against you, not for you.' },
+            { icon: '🗣️', title: 'Clear Communication', desc: 'Explaining what you built simply and confidently is a skill. Practice it. Record yourself. Most freshers know their work but cannot communicate it — and that costs them offers.' },
+            { icon: '🤖', title: 'AI Tool Awareness', desc: 'Companies now expect freshers to use Copilot, Claude, or ChatGPT as development tools. Saying "I never use AI" is not impressive. Show you can use it AND understand what it produces.' },
+            { icon: '📝', title: 'Basic Problem Solving', desc: 'You do not need FAANG-level DSA for most fresher roles. But you should be able to solve basic array, string, and logic problems without panicking. Consistent practice for 30 minutes daily adds up fast.' },
+            { icon: '🛠️', title: 'Deployed, Live Projects', desc: 'A deployed project with a real URL beats 10 local projects every time. Deployment shows you understand how real applications work end-to-end — most freshers skip this and it shows.' },
           ].map((item, i) => (
             <div key={i} style={{
               display: 'flex', gap: '0.875rem', alignItems: 'flex-start',
@@ -611,9 +632,9 @@ export default function CareerGuidancePage() {
       </Section>
 
       {/* ── Section 7: Common Mistakes ── */}
-      <Section title="07 — Common Mistakes Beginners Make" color="#EF4444" C={C}>
+      <Section title="07 — Mistakes That Are Costing Students Their Direction" color="#EF4444" C={C}>
         <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1.5rem' }}>
-          I've seen hundreds of freshers make these same mistakes. Learn from others — don't make them yourself:
+          These are not small mistakes. They are patterns that keep students stuck for months or years. Read each one honestly and ask yourself if any of them apply to you right now:
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
           {MISTAKES.map((m, i) => (
@@ -638,32 +659,32 @@ export default function CareerGuidancePage() {
       </Section>
 
       {/* ── Section 8: Final Advice ── */}
-      <Section title="08 — Honest Final Advice from Your Mentor" color="#9B6ED4" C={C}>
+      <Section title="08 — What You Should Do Right Now" color="#9B6ED4" C={C}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
           {[
-            { text: 'Pick ONE path and go deep. Not wide. Depth beats breadth every time in interviews.' },
-            { text: 'Build one complete project you are genuinely proud of. Make it live. Add it to your resume.' },
-            { text: 'Learn in public — GitHub commits, LinkedIn posts, sharing progress. Visibility matters.' },
-            { text: 'Stop comparing your month 2 to someone else\'s month 18. Everyone\'s timeline is different.' },
-            { text: 'Apply even when you feel "not ready". Most rejections teach you more than tutorials.' },
-            { text: 'Your degree does not determine your salary. Your skills and projects do.' },
+            { text: 'Spend 30 minutes on LinkedIn today. Search "fresher developer [your city] 2025". Look at 15 job postings. See what skills, what stacks, what company types are actually hiring near you. That is real data — more useful than any YouTube video.', color: '#9B6ED4' },
+            { text: 'Pick a path based on what genuinely interests you — not what someone said pays more. Interest is what keeps you going when the learning gets hard. And it will get hard.', color: '#60A5FA' },
+            { text: 'Start building something this week. Not a tutorial. Not watching someone else code. Open a code editor and build even a basic version of an idea. The confusion clears when you start building.', color: '#4ADE80' },
+            { text: 'Stop comparing your progress to others. Someone ahead of you started earlier or had more time or practiced more. The only comparison that matters is you today vs you last month.', color: '#F59E0B' },
+            { text: 'Use AI tools — Copilot, Claude, ChatGPT — as learning tools. Ask them to explain concepts. Use them to get unstuck. But always understand what you are submitting as your own work.', color: '#06B6D4' },
+            { text: 'Apply before you feel ready. You will never feel fully ready. 70% ready with real projects is good enough to start. Interviews show you exactly what to learn next.', color: '#EC4899' },
           ].map((advice, i) => (
             <div key={i} style={{
               display: 'flex', gap: '0.875rem', alignItems: 'flex-start',
               padding: '0.875rem 1.125rem',
               background: light ? 'rgba(155,110,212,0.05)' : 'rgba(155,110,212,0.07)',
-              border: `1px solid rgba(155,110,212,0.15)`,
+              borderLeft: `3px solid ${advice.color}`,
               borderRadius: 10,
             }}>
               <div style={{
                 width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
-                background: 'rgba(155,110,212,0.2)', border: '1px solid rgba(155,110,212,0.4)',
+                background: `${advice.color}20`, border: `1px solid ${advice.color}50`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontFamily: "'Orbitron', sans-serif", fontSize: '0.55rem', fontWeight: 700, color: '#9B6ED4',
+                fontFamily: "'Orbitron', sans-serif", fontSize: '0.55rem', fontWeight: 700, color: advice.color,
               }}>
                 {i + 1}
               </div>
-              <span style={{ fontSize: '0.9rem', color: C.sub, lineHeight: 1.7 }}>{advice.text}</span>
+              <span style={{ fontSize: '0.9rem', color: C.sub, lineHeight: 1.75 }}>{advice.text}</span>
             </div>
           ))}
         </div>
@@ -681,10 +702,10 @@ export default function CareerGuidancePage() {
             fontSize: 'clamp(1.1rem, 3vw, 1.5rem)', letterSpacing: '0.05em',
             color: C.text, margin: '0 0 0.875rem',
           }}>
-            My Final Recommendation
+            Your Path Is Waiting — Start It Today
           </h3>
-          <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, maxWidth: 540, margin: '0 auto 1.75rem' }}>
-            If you are a complete beginner — start with <strong style={{ color: '#9B6ED4' }}>Full Stack Web Development</strong>. Learn HTML → CSS → JavaScript → React → Node.js → MongoDB. Follow the roadmap above. Build real projects. That's your fastest path to a job.
+          <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, maxWidth: 560, margin: '0 auto 1.75rem' }}>
+            The gap between where you are and where you want to be is not talent. It is time + consistent work + the right direction. You now have the direction. The time is yours. Start building.
           </p>
           <div style={{ display: 'flex', gap: '0.875rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button

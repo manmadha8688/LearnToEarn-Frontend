@@ -10,6 +10,7 @@ import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
 
 import MissionsPage from './pages/MissionsPage'
+import JobsPage from './pages/JobsPage'
 import FresherInstructionsPage from './pages/FresherInstructionsPage'
 import CareerGuidancePage from './pages/CareerGuidancePage'
 import MissionDetailPage from './pages/MissionDetailPage'
@@ -31,6 +32,7 @@ import AdminFeedbacks from './pages/admin-skill-arena/AdminFeedbacks'
 import AdminReports from './pages/admin-skill-arena/AdminReports'
 import AdminMissions from './pages/admin-skill-arena/AdminMissions'
 import AdminProblems from './pages/admin-skill-arena/AdminProblems'
+import AdminWalkIns from './pages/admin-skill-arena/AdminWalkIns'
 import FeedbackNudge from './components/FeedbackNudge'
 import ScrollToTop from './components/ScrollToTop'
 
@@ -51,6 +53,7 @@ function App() {
           <Route path="/login"    element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/missions" element={<MissionsPage />} />
+          <Route path="/walk-ins" element={<JobsPage />} />
           <Route path="/fresher-instructions" element={<FresherInstructionsPage />} />
           <Route path="/fresher-instructions/career-guidance" element={<CareerGuidancePage />} />
           <Route path="/problem-solving" element={<ProblemSolvingPage />} />
@@ -87,6 +90,7 @@ function App() {
           <Route path="/admin-skill-arena/reports"      element={<ProtectedRoute adminOnly><AdminReports /></ProtectedRoute>} />
           <Route path="/admin-skill-arena/missions"     element={<ProtectedRoute adminOnly><AdminMissions /></ProtectedRoute>} />
           <Route path="/admin-skill-arena/problems"     element={<ProtectedRoute adminOnly><AdminProblems /></ProtectedRoute>} />
+          <Route path="/admin-skill-arena/walk-ins"    element={<ProtectedRoute adminOnly><AdminWalkIns /></ProtectedRoute>} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

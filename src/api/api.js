@@ -167,6 +167,12 @@ export const createMission    = (d)      => api.post('/admin/missions', d)      
 export const updateMission    = (id, d)  => api.put(`/admin/missions/${id}`, d) .then(r => { clearApiCache('missions', `mission:${id}`); return r })
 export const deleteMission    = (id)     => api.delete(`/admin/missions/${id}`)  .then(r => { clearApiCache('missions', `mission:${id}`); return r })
 
+// ─── WALK-INS ─────────────────────────────────────────
+export const getAdminWalkIns  = ()        => api.get('/admin/walkins')
+export const createWalkIn     = (d)       => api.post('/walkins', d)
+export const updateAdminWalkIn = (id, d)  => api.put(`/admin/walkins/${id}`, d)
+export const deleteWalkIn     = (id)      => api.delete(`/walkins/${id}`)
+
 // ─── REPORTS ──────────────────────────────────────────
 export const getAdminReports    = (p=0,s=20,status='') => api.get(`/reports?page=${p}&size=${s}${status ? `&status=${status}` : ''}`)
 export const updateReport       = (id, d)    => api.put(`/reports/${id}`, d)
