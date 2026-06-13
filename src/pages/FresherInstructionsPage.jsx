@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import ReportButton from '../components/ReportButton'
+import '../styles/pages-animations.css'
 import {
   Sun, Moon, X,
   TrendingUp, MessageCircle, Building2, BookOpen,
@@ -347,57 +348,52 @@ function SectionGridCard({ section, onClick, light }) {
     <div
       onClick={onClick}
       style={{
-        background: light ? '#ffffff' : '#0D1424',
+        background: light ? '#ffffff' : '#0a1020',
         border: `1px solid ${light ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.06)'}`,
-        borderRadius: 14, padding: '1.25rem',
+        borderLeft: `3px solid ${section.color}`,
+        borderRadius: 14, padding: '1.375rem',
         cursor: 'pointer',
-        transition: 'transform 0.15s, box-shadow 0.15s, border-color 0.15s',
+        transition: 'transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease',
         display: 'flex', flexDirection: 'column', gap: '0.75rem',
+        position: 'relative', overflow: 'hidden',
       }}
       onMouseEnter={e => {
         e.currentTarget.style.transform = 'translateY(-4px)'
-        e.currentTarget.style.boxShadow = `0 8px 28px ${section.color}20`
-        e.currentTarget.style.borderColor = `${section.color}50`
+        e.currentTarget.style.boxShadow = `0 10px 32px ${section.color}22`
+        e.currentTarget.style.borderColor = `${section.color}55`
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.transform = 'none'
-        e.currentTarget.style.boxShadow = 'none'
+        e.currentTarget.style.transform = ''
+        e.currentTarget.style.boxShadow = ''
         e.currentTarget.style.borderColor = light ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.06)'
       }}
     >
-      {/* Icon */}
-      <div style={{
-        width: 44, height: 44, borderRadius: 12,
-        background: section.bg,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        <Icon size={20} color={section.color} />
+      {/* Subtle bg glow on card */}
+      <div style={{ position: 'absolute', top: 0, right: 0, width: 80, height: 80, borderRadius: '50%', background: `radial-gradient(circle, ${section.color}12 0%, transparent 70%)`, pointerEvents: 'none' }} />
+
+      {/* Icon + number */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ width: 42, height: 42, borderRadius: 11, background: section.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Icon size={19} color={section.color} />
+        </div>
+        <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '0.6rem', fontWeight: 700, color: `${section.color}60`, letterSpacing: '0.05em' }}>
+          {String(section.id).padStart(2,'0')}
+        </span>
       </div>
 
       {/* Title */}
-      <div style={{
-        fontFamily: "'Rajdhani', sans-serif", fontWeight: 700,
-        fontSize: '0.95rem', color: light ? '#0F172A' : '#E2E8F0',
-        lineHeight: 1.3,
-      }}>
+      <div style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 700, fontSize: '0.95rem', color: light ? '#0F172A' : '#E2E8F0', lineHeight: 1.3 }}>
         {section.title}
       </div>
 
       {/* Brief */}
-      <div style={{
-        fontSize: '0.78rem', color: light ? '#64748B' : '#64748B',
-        lineHeight: 1.6, flex: 1,
-      }}>
+      <div style={{ fontSize: '0.78rem', color: light ? '#64748B' : '#64748B', lineHeight: 1.6, flex: 1 }}>
         {section.brief}
       </div>
 
       {/* Read more */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: '0.25rem',
-        fontFamily: "'Share Tech Mono', monospace", fontSize: '0.62rem',
-        color: section.color, letterSpacing: '0.06em', marginTop: 'auto',
-      }}>
-        READ MORE <ChevronRight size={13} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontFamily: "'Share Tech Mono', monospace", fontSize: '0.6rem', color: section.color, letterSpacing: '0.06em', marginTop: 'auto' }}>
+        READ MORE <ChevronRight size={12} />
       </div>
     </div>
   )
@@ -474,8 +470,19 @@ export default function FresherInstructionsPage() {
 
   const bg = light ? '#F1F5F9' : '#060D1A'
 
+  // Scroll reveal
+  useEffect(() => {
+    const els = document.querySelectorAll('.pg-reveal, .pg-reveal-left, .pg-reveal-right')
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('pg-visible'); io.unobserve(e.target) } }),
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    )
+    els.forEach(el => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+
   return (
-    <div style={{ minHeight: '100vh', background: bg, fontFamily: "'Rajdhani', sans-serif", color: light ? '#1A1A2E' : '#E2E8F0', overflowX: 'hidden' }}>
+    <div style={{ minHeight: '100vh', background: bg, fontFamily: "'Rajdhani', sans-serif", color: light ? '#1A1A2E' : '#E2E8F0', overflowX: 'hidden', position: 'relative' }}>
 
       {/* ── Nav ──────────────────────────────────────────────── */}
       <div style={{
@@ -525,15 +532,22 @@ export default function FresherInstructionsPage() {
         </div>
       </div>
 
+      {/* Background glow */}
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)', width: 700, height: 500, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(99,102,241,0.07) 0%, transparent 65%)', filter: 'blur(40px)' }} />
+        <div style={{ position: 'absolute', bottom: '20%', right: '-10%', width: 500, height: 400, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(155,110,212,0.05) 0%, transparent 65%)', filter: 'blur(40px)' }} />
+      </div>
+
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <div style={{ textAlign: 'center', padding: 'clamp(3rem,7vw,5rem) 1.5rem clamp(2rem,4vw,3rem)', maxWidth: 760, margin: '0 auto' }}>
-        <div style={{
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: 'clamp(3rem,7vw,5rem) 1.5rem clamp(2rem,4vw,3rem)', maxWidth: 760, margin: '0 auto' }}>
+        <div className="pg-hero-1" style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
           padding: '0.35rem 1rem', borderRadius: 999,
           background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.28)',
           fontFamily: "'Share Tech Mono', monospace", fontSize: '0.68rem',
           fontWeight: 700, color: '#6366F1', letterSpacing: '0.08em', marginBottom: '1.75rem',
         }}>
+          <span className="pg-pulse-dot" style={{ width:6, height:6, borderRadius:'50%', background:'#6366F1', color:'#6366F1', display:'inline-block', flexShrink:0 }} />
           <GraduationCap size={14} /> FOR FRESHERS ENTERING IT
         </div>
 
@@ -551,7 +565,7 @@ export default function FresherInstructionsPage() {
           </span>
         </h1>
 
-        <p style={{
+        <p className="pg-hero-3" style={{
           fontSize: 'clamp(0.9rem,2vw,1.05rem)', color: light ? '#475569' : '#94A3B8',
           lineHeight: 1.8, maxWidth: 560, margin: '0 auto 2rem',
         }}>
@@ -561,7 +575,7 @@ export default function FresherInstructionsPage() {
         </p>
 
         {/* Career Guidance CTA */}
-        <div style={{
+        <div className="pg-hero-4" style={{
           display: 'inline-flex', flexDirection: 'column', alignItems: 'center',
           gap: '0.5rem', marginBottom: '2.5rem',
         }}>
@@ -594,7 +608,7 @@ export default function FresherInstructionsPage() {
         </div>
 
         {/* Stats */}
-        <div style={{
+        <div className="pg-hero-5" style={{
           display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px',
           background: light ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.07)',
           borderRadius: 14, overflow: 'hidden', maxWidth: 460, margin: '0 auto',
@@ -609,8 +623,8 @@ export default function FresherInstructionsPage() {
       </div>
 
       {/* ── AI Banner ─────────────────────────────────────────── */}
-      <div style={{ maxWidth: 920, margin: '0 auto 2.5rem', padding: '0 1.25rem' }}>
-        <div style={{
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: 920, margin: '0 auto 2.5rem', padding: '0 1.25rem' }}>
+        <div className="pg-reveal" style={{
           background: 'linear-gradient(135deg, rgba(6,182,212,0.1), rgba(99,102,241,0.07))',
           border: '1px solid rgba(6,182,212,0.22)', borderRadius: 14,
           padding: '1.125rem 1.375rem',
@@ -626,8 +640,8 @@ export default function FresherInstructionsPage() {
       </div>
 
       {/* ── Section Grid ──────────────────────────────────────── */}
-      <div style={{ maxWidth: 920, margin: '0 auto', padding: '0 1.25rem 4rem' }}>
-        <div style={{ marginBottom: '1.5rem' }}>
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: 920, margin: '0 auto', padding: '0 1.25rem 4rem' }}>
+        <div className="pg-reveal" style={{ marginBottom: '1.5rem' }}>
           <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 800, fontSize: '1.25rem', color: light ? '#0F172A' : '#F1F5F9', margin: '0 0 0.25rem' }}>
             12 Things Every Fresher Must Understand
           </h2>
@@ -636,24 +650,71 @@ export default function FresherInstructionsPage() {
           </p>
         </div>
 
-        <div style={{
+        <div className="pg-stagger" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))',
           gap: '1rem',
         }}>
           {SECTIONS.map(section => (
-            <SectionGridCard
-              key={section.id}
-              section={section}
-              onClick={() => setActiveSection(section)}
-              light={light}
-            />
+            <div key={section.id} className="pg-reveal">
+              <SectionGridCard
+                section={section}
+                onClick={() => setActiveSection(section)}
+                light={light}
+              />
+            </div>
           ))}
+        </div>
+      </div>
+
+      {/* ── Today's Action Plan ──────────────────────────────── */}
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: 920, margin: '0 auto 3rem', padding: '0 1.25rem' }}>
+        <div className="pg-reveal" style={{
+          background: light
+            ? 'linear-gradient(135deg, rgba(99,102,241,0.06), rgba(155,110,212,0.04))'
+            : 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(155,110,212,0.07))',
+          border: `1px solid ${light ? 'rgba(99,102,241,0.18)' : 'rgba(99,102,241,0.22)'}`,
+          borderRadius: 18, padding: 'clamp(1.5rem,4vw,2.5rem)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+            <div style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(99,102,241,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Target size={20} color="#6366F1" />
+            </div>
+            <div>
+              <h2 style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 800, fontSize: '1.2rem', color: light ? '#0F172A' : '#F1F5F9', margin: 0 }}>
+                Your Action Plan — Start Today
+              </h2>
+              <p style={{ fontSize: '0.78rem', color: '#64748B', margin: 0 }}>5 things you can do right now to move forward</p>
+            </div>
+          </div>
+
+          <div className="pg-stagger" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {[
+              { step: '01', text: 'Open GitHub and create an account — upload even one simple project today', color: '#6366F1' },
+              { step: '02', text: 'Pick ONE language (Python, Java, or JavaScript) and commit to it for 3 months', color: '#8B5CF6' },
+              { step: '03', text: 'Write down your target role: Frontend / Backend / Full Stack / Data Analyst', color: '#EC4899' },
+              { step: '04', text: 'Spend 30 minutes on a coding platform — HackerRank, LeetCode, or this platform', color: '#10B981' },
+              { step: '05', text: 'Read the Career Guidance page — it tells you exactly what to learn and in what order', color: '#F59E0B' },
+            ].map(({ step, text, color }, i) => (
+              <div key={i} className="pg-reveal pg-check-item" style={{
+                display: 'flex', alignItems: 'flex-start', gap: '0.875rem',
+                padding: '0.875rem 1.125rem',
+                background: light ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.03)',
+                border: `1px solid ${light ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)'}`,
+                borderLeft: `3px solid ${color}`,
+                borderRadius: 10, cursor: 'default',
+              }}>
+                <div style={{ fontFamily: "'Orbitron', sans-serif", fontWeight: 900, fontSize: '0.6rem', color, minWidth: 24, paddingTop: 2 }}>{step}</div>
+                <span style={{ fontSize: '0.875rem', color: light ? '#374151' : '#CBD5E1', lineHeight: 1.6 }}>{text}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* ── Hiring Process ────────────────────────────────────── */}
       <div style={{
+        position: 'relative', zIndex: 1,
         padding: '3.5rem 1.25rem',
         background: light ? 'rgba(99,102,241,0.03)' : 'rgba(99,102,241,0.04)',
         borderTop: `1px solid ${light ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)'}`,
@@ -672,14 +733,16 @@ export default function FresherInstructionsPage() {
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px,100%), 1fr))', gap: '1rem' }}>
-            {HIRING_TYPES.map((h, i) => <HiringCard key={i} h={h} light={light} />)}
+          <div className="pg-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px,100%), 1fr))', gap: '1rem' }}>
+            {HIRING_TYPES.map((h, i) => (
+              <div key={i} className="pg-reveal"><HiringCard h={h} light={light} /></div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* ── CTA ───────────────────────────────────────────────── */}
-      <div style={{ padding: '3.5rem 1.5rem 5rem', textAlign: 'center' }}>
+      <div style={{ position: 'relative', zIndex: 1, padding: '3.5rem 1.5rem 5rem', textAlign: 'center' }}>
         <div style={{
           maxWidth: 640, margin: '0 auto',
           background: light ? 'linear-gradient(135deg, rgba(99,102,241,0.07), rgba(155,110,212,0.05))' : 'linear-gradient(135deg, rgba(99,102,241,0.12), rgba(155,110,212,0.07))',

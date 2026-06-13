@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import { Sun, Moon, ArrowLeft, ChevronDown, ChevronUp, CheckCircle } from 'lucide-react'
 import ReportButton from '../components/ReportButton'
+import '../styles/pages-animations.css'
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -198,6 +199,17 @@ export default function CareerGuidancePage() {
   const [openStep, setOpenStep] = useState(0)
   const [activeTab, setActiveTab] = useState('roles')
 
+  // Scroll reveal
+  useEffect(() => {
+    const els = document.querySelectorAll('.pg-reveal, .pg-reveal-left, .pg-reveal-right')
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('pg-visible'); io.unobserve(e.target) } }),
+      { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
+    )
+    els.forEach(el => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+
   const C = {
     bg:      'var(--cg-bg)',
     card:    'var(--cg-card)',
@@ -209,11 +221,18 @@ export default function CareerGuidancePage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: C.bg, color: C.text, fontFamily: "'Rajdhani', sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: C.bg, color: C.text, fontFamily: "'Rajdhani', sans-serif", position: 'relative' }}>
+
+      {/* Background glow orbs */}
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '-5%', left: '40%', width: 600, height: 450, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(155,110,212,0.08) 0%, transparent 65%)', filter: 'blur(50px)' }} />
+        <div style={{ position: 'absolute', bottom: '30%', left: '-5%', width: 400, height: 350, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(99,102,241,0.06) 0%, transparent 65%)', filter: 'blur(40px)' }} />
+        <div style={{ position: 'absolute', top: '60%', right: '-5%', width: 450, height: 350, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(236,72,153,0.04) 0%, transparent 65%)', filter: 'blur(40px)' }} />
+      </div>
 
       {/* ── Nav ── */}
       <div style={{
-        position: 'sticky', top: 0, zIndex: 50,
+        position: 'sticky', top: 0, zIndex: 51,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 1.5rem', height: 54,
         background: 'var(--cg-nav-bg)',
@@ -247,11 +266,12 @@ export default function CareerGuidancePage() {
 
       {/* ── Hero ── */}
       <div style={{
+        position: 'relative', zIndex: 1,
         textAlign: 'center',
         padding: 'clamp(2.5rem, 6vw, 5rem) 1.5rem clamp(2rem, 4vw, 3rem)',
         background: 'linear-gradient(180deg, rgba(155,110,212,0.07) 0%, transparent 100%)',
       }}>
-        <div style={{
+        <div className="pg-hero-1" style={{
           display: 'inline-block', fontFamily: "'Share Tech Mono', monospace",
           fontSize: '0.65rem', letterSpacing: '0.18em',
           color: C.accent, background: 'rgba(155,110,212,0.1)',
@@ -261,7 +281,7 @@ export default function CareerGuidancePage() {
           ◈ FROM A SENIOR DEVELOPER — FOR YOU
         </div>
 
-        <h1 className="cg-hero-title" style={{
+        <h1 className="cg-hero-title pg-hero-2" style={{
           fontFamily: "'Orbitron', sans-serif", fontWeight: 900,
           fontSize: 'clamp(1.75rem, 5vw, 3rem)', letterSpacing: '0.05em',
           lineHeight: 1.15, margin: '0 0 1.25rem',
@@ -269,7 +289,7 @@ export default function CareerGuidancePage() {
           Stop Being Confused.<br />Start Moving Forward.
         </h1>
 
-        <p style={{
+        <p className="pg-hero-3" style={{
           fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', color: C.sub,
           maxWidth: 580, margin: '0 auto 0',
           lineHeight: 1.75,
@@ -279,7 +299,7 @@ export default function CareerGuidancePage() {
       </div>
 
       {/* ── Mentor Note ── */}
-      <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 1.25rem 2.5rem' }}>
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: 800, margin: '0 auto', padding: '0 1.25rem 2.5rem' }}>
         <div style={{
           background: C.card, border: `1px solid rgba(155,110,212,0.25)`,
           borderLeft: '4px solid #9B6ED4', borderRadius: 12,
@@ -340,9 +360,41 @@ export default function CareerGuidancePage() {
         <p style={{ color: C.sub, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1.5rem' }}>
           Here's the honest breakdown of what's actually hiring, what pays well, and how long it takes a fresher to get in:
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%,320px), 1fr))', gap: '1rem' }}>
+        {/* Quick Comparison Table */}
+        <div className="pg-reveal" style={{ overflowX: 'auto', marginBottom: '1.75rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', fontFamily: "'Rajdhani', sans-serif" }}>
+            <thead>
+              <tr style={{ background: light ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)' }}>
+                {['Role','Demand','Salary (Fresher)','Time to Job','Best For'].map(h => (
+                  <th key={h} style={{ padding: '0.625rem 0.875rem', textAlign: 'left', fontWeight: 700, fontSize: '0.7rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: C.muted, borderBottom: `1px solid ${C.border}`, whiteSpace: 'nowrap' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {ROLES.map((role, i) => (
+                <tr key={i} style={{ borderBottom: `1px solid ${C.border}`, transition: 'background 0.15s' }}
+                  onMouseEnter={e => e.currentTarget.style.background = light ? 'rgba(0,0,0,0.025)' : 'rgba(255,255,255,0.025)'}
+                  onMouseLeave={e => e.currentTarget.style.background = ''}
+                >
+                  <td style={{ padding: '0.625rem 0.875rem', whiteSpace: 'nowrap' }}>
+                    <span style={{ marginRight: 6 }}>{role.emoji}</span>
+                    <span style={{ fontWeight: 700, color: role.color }}>{role.title}</span>
+                  </td>
+                  <td style={{ padding: '0.625rem 0.875rem' }}>
+                    <span style={{ fontSize: '0.65rem', background: `${role.color}15`, color: role.color, border: `1px solid ${role.color}30`, borderRadius: 4, padding: '0.1rem 0.45rem' }}>{role.demand}</span>
+                  </td>
+                  <td style={{ padding: '0.625rem 0.875rem', color: C.sub, whiteSpace: 'nowrap' }}>{role.salary}</td>
+                  <td style={{ padding: '0.625rem 0.875rem', color: C.sub, whiteSpace: 'nowrap' }}>{role.timeToJob}</td>
+                  <td style={{ padding: '0.625rem 0.875rem', color: C.muted, fontSize: '0.78rem' }}>{role.skills.slice(0,2).join(', ')}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="pg-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%,320px), 1fr))', gap: '1rem' }}>
           {ROLES.map((role, i) => (
-            <div key={i} style={{
+            <div key={i} className="pg-reveal pg-role-card" style={{
               background: C.card, border: `1px solid ${C.border}`,
               borderTop: `3px solid ${role.color}`,
               borderRadius: 12, padding: '1.25rem',
@@ -685,12 +737,12 @@ export default function CareerGuidancePage() {
 // ── Section Wrapper ─────────────────────────────────────────────────────────
 function Section({ title, color, C, children }) {
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 1.25rem 3rem' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', marginBottom: '1.75rem' }}>
-        <div style={{ width: 4, height: 32, borderRadius: 2, background: color, flexShrink: 0 }} />
+    <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '0 1.25rem 3rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', marginBottom: '1.75rem', paddingBottom: '1rem', borderBottom: `1px solid ${color}22` }}>
+        <div style={{ width: 3, height: 28, borderRadius: 2, background: `linear-gradient(to bottom, ${color}, ${color}66)`, flexShrink: 0 }} />
         <h2 style={{
           fontFamily: "'Orbitron', sans-serif", fontWeight: 700,
-          fontSize: 'clamp(0.95rem, 2.5vw, 1.25rem)', letterSpacing: '0.04em',
+          fontSize: 'clamp(0.95rem, 2.5vw, 1.2rem)', letterSpacing: '0.04em',
           color: C.text, margin: 0,
         }}>{title}</h2>
       </div>
