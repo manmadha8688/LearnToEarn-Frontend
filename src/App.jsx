@@ -10,6 +10,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import FeedbackNudge from './components/FeedbackNudge'
 import ScrollToTop from './components/ScrollToTop'
 import ReportButton from './components/ReportButton'
+import AutoHideNav from './components/AutoHideNav'
 
 // ── Page components — lazy loaded ─────────────────────────────────────────────
 // Each route loads its chunk only when first visited; subsequent visits use cache
@@ -162,6 +163,7 @@ function App() {
         <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
         <FeedbackNudge />
         <ScrollToTop />
+        <AutoHideNav />
         <GlobalReportButton />
         <Suspense fallback={<PageTransitionLoader />}>
           <Routes>
@@ -212,8 +214,9 @@ function App() {
             <Route path="/problem-solving/start-coding"    element={<ProtectedRoute><TrackPage /></ProtectedRoute>} />
             <Route path="/problem-solving/logic-building"  element={<ProtectedRoute><TrackPage /></ProtectedRoute>} />
             <Route path="/problem-solving/skill-up"        element={<ProtectedRoute><TrackPage /></ProtectedRoute>} />
-            <Route path="/problem-solving/interview-prep"  element={<ProtectedRoute><TrackPage /></ProtectedRoute>} />
-            <Route path="/problem-solving/scenario-coding" element={<ProtectedRoute><TrackPage /></ProtectedRoute>} />
+            <Route path="/problem-solving/crack-it"  element={<ProtectedRoute><TrackPage /></ProtectedRoute>} />
+            <Route path="/problem-solving/build-it" element={<ProtectedRoute><TrackPage /></ProtectedRoute>} />
+            <Route path="/problem-solving/prove-it"        element={<ProtectedRoute><TrackPage /></ProtectedRoute>} />
             <Route path="/problem-solving/:id"             element={<ProtectedRoute><ProblemDetailPage /></ProtectedRoute>} />
 
             {/* Missions detail — requires login */}

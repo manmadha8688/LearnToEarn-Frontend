@@ -40,7 +40,6 @@ export default function DashboardPage() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const [summary, setSummary]         = useState(null)
-  const [activeRoadmap] = useState(null)
   const [loading, setLoading]         = useState(true)
 
   const [activeView, setActiveView]   = useState(() => searchParams.get('view') || 'arena')
@@ -274,8 +273,6 @@ export default function DashboardPage() {
   const initials       = user?.fullName?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
   const doneCount      = DAILY_QUESTS.filter(q => quests[q.id]).length
   const earnedXp       = DAILY_QUESTS.filter(q => quests[q.id]).reduce((s, q) => s + q.xp, 0)
-  const arenaSubjects  = activeRoadmap?.subjects ?? []
-  const nextGate       = arenaSubjects.find(s => !s.hasBadge)
 
   const filteredSubjects = subjects.filter(s => {
     const sp = s.totalConcepts > 0 ? Math.round((s.completedCount / s.totalConcepts) * 100) : 0
@@ -402,7 +399,7 @@ export default function DashboardPage() {
           ) : (
             <div className="dash-no-path" onClick={() => switchView('paths')}>
               <div className="dash-no-path__label">NO ACTIVE PATH</div>
-              <div className="dash-no-path__cta">→ Go to Hunter Path to Strt Hunting </div>
+              <div className="dash-no-path__cta">→ Go to Hunter Path to Start Hunting </div>
             </div>
           )}
 
@@ -739,8 +736,6 @@ export default function DashboardPage() {
               ? <>Scout mode active — <strong>{filteredSubjects.length} gates</strong> detected.</>
               : activeView === 'paths'
               ? <>Hunter path registry — <strong>{allRoadmaps.length} paths</strong> available.</>
-              : nextGate
-              ? <>Active gate: <strong>{nextGate.title}</strong> — {nextGate.totalConcepts - nextGate.completedConcepts} skills remaining.</>
               : <>Welcome, Hunter <strong>{user?.fullName?.split(' ')[0]}</strong>. Choose a dungeon gate to begin.</>}
           </span>
         </div>

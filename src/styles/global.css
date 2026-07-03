@@ -4262,11 +4262,6 @@ body { font-family: 'Rajdhani', 'Inter', -apple-system, sans-serif; font-size: 1
 /* ── Landing page: hamburger hidden on desktop ── */
 .lp-mob-menu-btn { display: none; align-items: center; justify-content: center; }
 
-/* ── Landing page: hide Sign Out on very small screens ── */
-@media (max-width: 400px) {
-  .lp-signout-btn { display: none !important; }
-}
-
 /* ── 480px — phones ── */
 @media (max-width: 480px) {
   /* ─ SL Dashboard Navbar ─ */
@@ -4735,4 +4730,35 @@ body { font-family: 'Rajdhani', 'Inter', -apple-system, sans-serif; font-size: 1
   --ps-code-border:   rgba(2,132,199,0.2);
   --ps-hint-bg:       rgba(2,132,199,0.06);
   --ps-muted:         #64748B;
+}
+
+/* ── Auto-hide top navbars on scroll ──────────────────────────────────────────
+   Navbar shows on load, slides up + hides while scrolling down, and reappears
+   when the user scrolls up. Applies to landing, Code Gym, AI Lab and Deployment
+   navbars only — the admin (.navbar) and Skill Arena bars are intentionally left
+   always-visible. The `nav-hidden` class is toggled on <html> by AutoHideNav. */
+.lp-navbar,
+.ps-nav,
+.ailab-nav,
+.deploy-nav,
+.missions-nav {
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.nav-hidden .lp-navbar,
+html.nav-hidden .ps-nav,
+html.nav-hidden .ailab-nav,
+html.nav-hidden .deploy-nav,
+html.nav-hidden .missions-nav {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-navbar,
+  .ps-nav,
+  .ailab-nav,
+  .deploy-nav,
+  .missions-nav {
+    transition: none;
+  }
 }
