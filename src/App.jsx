@@ -101,23 +101,23 @@ function ScrollResetter() {
 
 // Per-route <title> for better UX (browser tab / history) and SEO.
 // Dynamic detail pages fall back to a section title; the base title is used for the rest.
-const BASE_TITLE = 'LearnToEarn — Gamified Career Learning Platform'
+const BASE_TITLE = 'learnforearn — Gamified Career Learning Platform'
 const ROUTE_TITLES = {
   '/': BASE_TITLE,
-  '/login': 'Sign In · LearnToEarn',
-  '/register': 'Create Account · LearnToEarn',
-  '/forgot-password': 'Reset Password · LearnToEarn',
-  '/about': 'About · LearnToEarn',
-  '/terms': 'Terms of Service · LearnToEarn',
-  '/privacy': 'Privacy Policy · LearnToEarn',
-  '/missions': 'Missions · LearnToEarn',
-  '/walk-ins': 'Walk-In Drives · LearnToEarn',
-  '/fresher-instructions': 'Fresher Guide · LearnToEarn',
-  '/fresher-instructions/career-guidance': 'Career Guidance · LearnToEarn',
-  '/ai-lab': 'AI Lab — 89+ AI Tools · LearnToEarn',
-  '/deployment': 'Deployment Guides · LearnToEarn',
-  '/problem-solving': 'Code GYM — Problem Solving · LearnToEarn',
-  '/skill-arena/dashboard': 'Skill Arena · LearnToEarn',
+  '/login': 'Sign In · learnforearn',
+  '/register': 'Create Account · learnforearn',
+  '/forgot-password': 'Reset Password · learnforearn',
+  '/about': 'About · learnforearn',
+  '/terms': 'Terms of Service · learnforearn',
+  '/privacy': 'Privacy Policy · learnforearn',
+  '/missions': 'Missions · learnforearn',
+  '/walk-ins': 'Walk-In Drives · learnforearn',
+  '/fresher-instructions': 'Fresher Guide · learnforearn',
+  '/fresher-instructions/career-guidance': 'Career Guidance · learnforearn',
+  '/ai-lab': 'AI Lab — 89+ AI Tools · learnforearn',
+  '/deployment': 'Deployment Guides · learnforearn',
+  '/problem-solving': 'Code GYM — Problem Solving · learnforearn',
+  '/skill-arena/dashboard': 'Skill Arena · learnforearn',
 }
 
 function DocumentTitle() {
@@ -125,11 +125,11 @@ function DocumentTitle() {
   useEffect(() => {
     let title = ROUTE_TITLES[pathname]
     if (!title) {
-      if (pathname.startsWith('/ai-lab/')) title = 'AI Lab · LearnToEarn'
-      else if (pathname.startsWith('/deployment/')) title = 'Deployment Guide · LearnToEarn'
-      else if (pathname.startsWith('/problem-solving/')) title = 'Code GYM · LearnToEarn'
-      else if (pathname.startsWith('/admin-skill-arena')) title = 'Admin · LearnToEarn'
-      else if (pathname.startsWith('/skill-arena')) title = 'Skill Arena · LearnToEarn'
+      if (pathname.startsWith('/ai-lab/')) title = 'AI Lab · learnforearn'
+      else if (pathname.startsWith('/deployment/')) title = 'Deployment Guide · learnforearn'
+      else if (pathname.startsWith('/problem-solving/')) title = 'Code GYM · learnforearn'
+      else if (pathname.startsWith('/admin-skill-arena')) title = 'Admin · learnforearn'
+      else if (pathname.startsWith('/skill-arena')) title = 'Skill Arena · learnforearn'
       else title = BASE_TITLE
     }
     document.title = title

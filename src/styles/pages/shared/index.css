@@ -1,5 +1,6 @@
 /* Shared pages — jobs, missions, problem-solving, ailab, deployment, not-found */
 
+@import './section-nav-brand.css';
 @import './not-found.css';
 @import './jobs.css';
 @import './missions.css';

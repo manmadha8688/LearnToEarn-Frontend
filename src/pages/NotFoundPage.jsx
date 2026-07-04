@@ -11,7 +11,7 @@ export default function NotFoundPage() {
         The page you are looking for does not exist or may have been moved.
       </p>
       <button type="button" className="not-found-page__btn" onClick={() => navigate('/')}>
-        ← RETURN HOME
+        ← learnforearn
       </button>
     </div>
   )
