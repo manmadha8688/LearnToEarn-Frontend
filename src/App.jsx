@@ -22,6 +22,7 @@ const RegisterForm               = lazy(() => import('./pages/auth/RegisterForm'
 const ForgotPasswordForm         = lazy(() => import('./pages/auth/ForgotPasswordForm'))
 const NotFoundPage             = lazy(() => import('./pages/NotFoundPage'))
 const AboutPage                = lazy(() => import('./pages/AboutPage'))
+const ContactPage              = lazy(() => import('./pages/ContactPage'))
 const TermsPage                = lazy(() => import('./pages/TermsPage'))
 const PrivacyPage              = lazy(() => import('./pages/PrivacyPage'))
 
@@ -190,6 +191,7 @@ function App() {
               </Route>
             </Route>
             <Route path="/about"   element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
             <Route path="/terms"   element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/missions" element={<MissionsPage />} />

@@ -17,32 +17,63 @@ const reduced = () =>
 const readMs = (text = '') =>
   Math.min(5200, Math.max(2300, 2300 + Math.max(0, String(text).length - 24) * 42))
 
-/* Steps through a line array with readable timing; optionally loops. */
+/* Steps through a line array with readable timing; pauses when active=false. */
 function useSequence(lines, active, loop) {
   const [idx, setIdx] = useState(0)
   const [visible, setVisible] = useState(false)
+  const runRef = useRef({ displayIdx: 0, timers: [], linesKey: '', started: false })
+
+  const clearTimers = () => {
+    runRef.current.timers.forEach(clearTimeout)
+    runRef.current.timers = []
+  }
 
   useEffect(() => {
-    if (!active || !lines?.length) { setVisible(false); return }
-    if (reduced()) { setIdx(lines.length - 1); setVisible(true); return }
+    clearTimers()
+    if (!lines?.length) { setVisible(false); return }
 
-    let i = 0
-    let timer
-    setVisible(true)
-    const run = () => {
-      setIdx(i)
-      const dur = readMs(lines[i].text)
-      const isLast = i >= lines.length - 1
-      if (!isLast) {
-        i += 1
-        timer = setTimeout(run, dur + 440)
-      } else if (loop) {
-        timer = setTimeout(() => { i = 0; run() }, dur + 1400)
-      }
-      // non-loop: hold the last line
+    const linesKey = lines.map(l => l.text).join('\x00')
+    if (runRef.current.linesKey !== linesKey) {
+      runRef.current.linesKey = linesKey
+      runRef.current.displayIdx = 0
+      runRef.current.started = false
+      setIdx(0)
+      setVisible(false)
     }
-    run()
-    return () => clearTimeout(timer)
+
+    if (reduced()) {
+      setIdx(lines.length - 1)
+      setVisible(true)
+      return
+    }
+
+    if (!active) return
+
+    setVisible(true)
+    const schedule = (fn, ms) => {
+      runRef.current.timers.push(setTimeout(fn, ms))
+    }
+
+    const showFrom = (startIdx, initialDelay) => {
+      const show = (i) => {
+        setIdx(i)
+        runRef.current.displayIdx = i
+        const dur = readMs(lines[i].text)
+        const isLast = i >= lines.length - 1
+        if (!isLast) {
+          schedule(() => show(i + 1), dur + 440)
+        } else if (loop) {
+          schedule(() => show(0), dur + 1400)
+        }
+      }
+      schedule(() => show(startIdx), initialDelay)
+    }
+
+    const delay = runRef.current.started ? 280 : 0
+    runRef.current.started = true
+    showFrom(runRef.current.displayIdx, delay)
+
+    return clearTimers
   }, [active, loop, lines])
 
   return { idx, visible }
@@ -110,9 +141,9 @@ export function BotStage({ lines, loop = false, active = true, size = 'lg' }) {
 /* Per-gate banter — activates only when the gate scrolls into view. */
 export function GateBots({ lines }) {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, amount: 0.5 })
+  const inView = useInView(ref, { once: false, amount: 0.35 })
   return (
-    <div ref={ref} className="lv-row__bots">
+    <div ref={ref} className={`lv-row__bots${inView ? '' : ' lv-row__bots--paused'}`}>
       <BotStage lines={lines} active={inView} size="sm" />
     </div>
   )

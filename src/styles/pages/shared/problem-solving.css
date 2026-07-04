@@ -2035,6 +2035,16 @@
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
 }
 
+.gym-login-scene--paused .login-scene-glow,
+.gym-login-scene--paused .login-scene-grid {
+  animation-play-state: paused;
+}
+
+.lv-row__bots--paused .gb--talk .gb__mouth,
+.lv-row__bots--paused .gb--talk .gb__antenna-tip {
+  animation-play-state: paused;
+}
+
 .gym-login-scene__glow,
 .gym-login-scene__grid {
   position: absolute;

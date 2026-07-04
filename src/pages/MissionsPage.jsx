@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Sun, Moon, Search, X, SlidersHorizontal, ChevronDown } from 'lucide-react'
 import { motion } from 'framer-motion'
 import SmokeBladeLoader from '../components/loaders/SmokeBladeLoader'
+import EnterArenaButton from '../components/EnterArenaButton'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { getMissions } from '../api/api'
@@ -146,13 +147,7 @@ export default function MissionsPage() {
             {light ? <Moon size={14} /> : <Sun size={14} />}
           </button>
 
-          <button
-            type="button"
-            onClick={() => navigate(user ? '/skill-arena/dashboard' : '/login?redirect=/skill-arena/dashboard')}
-            className="missions-nav__arena"
-          >
-            ⚔ <span className="mission-arena-label">SKILL ARENA</span>
-          </button>
+          <EnterArenaButton />
         </div>
       </div>
 

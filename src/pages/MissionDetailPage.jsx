@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import SmokeBladeLoader from '../components/loaders/SmokeBladeLoader'
+import EnterArenaButton from '../components/EnterArenaButton'
 import { getMission } from '../api/api'
 import { useTheme } from '../context/ThemeContext'
 
@@ -84,9 +85,7 @@ export default function MissionDetailPage() {
           >
             {light ? <Moon size={14} /> : <Sun size={14} />}
           </button>
-          <button type="button" onClick={() => navigate('/skill-arena/dashboard')} className="md-top__arena">
-            ⚔ <span className="md-top__arena-label">Skill Arena</span>
-          </button>
+          <EnterArenaButton />
         </div>
       </header>
 

@@ -3,6 +3,7 @@ import { PAGE_MIN_MS } from '../../components/loaders/_config'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Sun, Moon, Search, X, ChevronRight } from 'lucide-react'
 import MatrixRainLoader from '../../components/loaders/MatrixRainLoader'
+import EnterArenaButton from '../../components/EnterArenaButton'
 import { useTheme } from '../../context/ThemeContext'
 import { getProblems } from '../../api/api'
 
@@ -135,9 +136,7 @@ export default function TrackPage() {
           <button type="button" onClick={toggleTheme} className="ps-nav__theme">
             {light ? <Moon size={14} /> : <Sun size={14} />}
           </button>
-          <button type="button" onClick={() => navigate('/skill-arena/dashboard')} className="ps-nav__arena">
-            ⚔ SKILL ARENA
-          </button>
+          <EnterArenaButton />
         </div>
       </div>
 

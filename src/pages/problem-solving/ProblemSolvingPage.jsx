@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { Sun, Moon } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useTheme } from '../../context/ThemeContext'
+import EnterArenaButton from '../../components/EnterArenaButton'
 import GymLoginSquad from './components/GymLoginSquad'
 import GymTrackPath from './components/GymTrackPath'
 
@@ -50,9 +51,7 @@ export default function ProblemSolvingPage() {
           <button type="button" onClick={toggleTheme} className="ps-nav__theme">
             {light ? <Moon size={14} /> : <Sun size={14} />}
           </button>
-          <button type="button" onClick={() => navigate('/skill-arena/dashboard')} className="ps-nav__arena">
-            ⚔ SKILL ARENA
-          </button>
+          <EnterArenaButton />
         </div>
       </div>
 

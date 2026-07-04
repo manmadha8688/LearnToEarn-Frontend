@@ -3869,10 +3869,17 @@ html.nav-hidden .sl-dashboard-wrapper {
     font-size: 0.58rem !important;
   }
   .lp-footer {
+    padding: 1.5rem 1rem 1.25rem !important;
+    gap: 1rem !important;
+  }
+  .lp-footer__main {
     flex-direction: column !important;
     align-items: flex-start !important;
-    padding: 1.25rem 1rem !important;
-    gap: 0.75rem !important;
+    gap: 1rem !important;
+  }
+  .lp-footer__legal {
+    justify-content: flex-start !important;
+    gap: 0.75rem 1.25rem !important;
   }
 
   /* Middle panel takes full grid width */
@@ -4823,4 +4830,23 @@ html.nav-hidden .sl-dash-nav {
   .sl-dash-nav {
     transition: none;
   }
+}
+
+/* Enter Arena — shared section navbar CTA (matches landing lp-btn-primary--nav) */
+.enter-arena-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 0.375rem 0.875rem !important;
+  font-size: 0.8125rem !important;
+  border-radius: 8px !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.enter-arena-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 22px rgba(155, 110, 212, 0.65), 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter-arena-btn:hover { transform: none; }
 }

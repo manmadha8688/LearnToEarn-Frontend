@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { AnimatePresence, motion, useSpring, useTransform } from 'framer-motion'
+import { AnimatePresence, motion, useInView, useSpring, useTransform } from 'framer-motion'
 import { MangaSpeechBubble } from '../../auth/components/MangaSpeechBubble'
 import { getLineReadMs, LINE_GAP_MS, BEAT_TAIL_MS } from '../../auth/hooks/companionMurmurs'
 
@@ -10,38 +10,64 @@ const lineSpeaker = (line) => line?.speaker || line?.who || null
 function useBotSequence(lines, active, loop, clearAfterDone) {
   const [idx, setIdx] = useState(0)
   const [done, setDone] = useState(false)
+  const runRef = useRef({ displayIdx: 0, timers: [], linesKey: '', started: false, finished: false })
+
+  const clearTimers = () => {
+    runRef.current.timers.forEach(clearTimeout)
+    runRef.current.timers = []
+  }
 
   useEffect(() => {
-    if (!active || !lines?.length) return
-    setDone(false)
-    setIdx(0)
+    clearTimers()
+    if (!lines?.length) return
+
+    const linesKey = lines.map(l => l.text).join('\x00')
+    if (runRef.current.linesKey !== linesKey) {
+      runRef.current.linesKey = linesKey
+      runRef.current.displayIdx = 0
+      runRef.current.started = false
+      runRef.current.finished = false
+      setIdx(0)
+      setDone(false)
+    }
 
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches
     if (reduced) {
       setIdx(lines.length - 1)
+      setDone(false)
       return
     }
 
-    let i = 0
-    const timers = []
+    if (!active) return
+    if (runRef.current.finished && clearAfterDone) return
+
     const schedule = (fn, ms) => {
-      timers.push(setTimeout(fn, ms))
+      runRef.current.timers.push(setTimeout(fn, ms))
     }
-    const run = () => {
-      setIdx(i)
-      const dur = getLineReadMs(lines[i]?.text)
-      const isLast = i >= lines.length - 1
-      if (!isLast) {
-        i += 1
-        schedule(run, dur + LINE_GAP_MS)
-      } else if (loop) {
-        schedule(() => { i = 0; run() }, dur + 1600)
-      } else if (clearAfterDone) {
-        schedule(() => setDone(true), dur + BEAT_TAIL_MS)
+
+    const showFrom = (startIdx, initialDelay) => {
+      const show = (i) => {
+        setDone(false)
+        setIdx(i)
+        runRef.current.displayIdx = i
+        const dur = getLineReadMs(lines[i]?.text)
+        const isLast = i >= lines.length - 1
+        if (!isLast) {
+          schedule(() => show(i + 1), dur + LINE_GAP_MS)
+        } else if (loop) {
+          schedule(() => show(0), dur + 1600)
+        } else if (clearAfterDone) {
+          schedule(() => { runRef.current.finished = true; setDone(true) }, dur + BEAT_TAIL_MS)
+        }
       }
+      schedule(() => show(startIdx), initialDelay)
     }
-    schedule(run, START_DELAY_MS)
-    return () => timers.forEach(clearTimeout)
+
+    const delay = runRef.current.started ? 280 : START_DELAY_MS
+    runRef.current.started = true
+    showFrom(runRef.current.displayIdx, delay)
+
+    return clearTimers
   }, [active, clearAfterDone, loop, lines])
 
   const line = done ? null : lines?.[idx]
@@ -71,7 +97,7 @@ function BotEye({ size = 'md', pupilX, pupilY, covered, sleepy, led }) {
   )
 }
 
-function SideBot({ variant, active, pupilX, pupilY, speech, bubbleKey }) {
+function SideBot({ variant, active, pupilX, pupilY, speech, bubbleKey, paused = false }) {
   const isLeft = variant === 'byte'
   const tail = isLeft ? 'left' : 'right'
 
@@ -79,7 +105,7 @@ function SideBot({ variant, active, pupilX, pupilY, speech, bubbleKey }) {
     <motion.div
       className={`login-bot login-bot--${variant}${active ? ' login-bot--speaking' : ''}`}
       animate={{ y: active ? [0, -5, 0] : [0, -2, 0] }}
-      transition={{ duration: active ? 0.45 : 2.8, repeat: Infinity, ease: 'easeInOut' }}
+      transition={{ duration: active ? 0.45 : 2.8, repeat: paused ? 0 : Infinity, ease: 'easeInOut' }}
     >
       <AnimatePresence initial={false}>
         {speech && <MangaSpeechBubble key={bubbleKey} text={speech} tail={tail} />}
@@ -89,7 +115,7 @@ function SideBot({ variant, active, pupilX, pupilY, speech, bubbleKey }) {
         <motion.div
           className="login-bot-antenna"
           animate={{ rotate: active ? [0, 4, -4, 0] : 0 }}
-          transition={{ duration: 1.2, repeat: Infinity }}
+          transition={{ duration: 1.2, repeat: paused ? 0 : Infinity }}
         >
           <span className="login-bot-antenna-tip" />
         </motion.div>
@@ -118,7 +144,7 @@ function SideBot({ variant, active, pupilX, pupilY, speech, bubbleKey }) {
   )
 }
 
-function EchoBot({ active, pupilX, pupilY, speech, bubbleKey }) {
+function EchoBot({ active, pupilX, pupilY, speech, bubbleKey, paused = false }) {
   const bounce = useSpring(active ? 1 : 0, { stiffness: 180, damping: 14 })
   const bodyY = useTransform(bounce, [0, 1], [0, -6])
 
@@ -127,7 +153,7 @@ function EchoBot({ active, pupilX, pupilY, speech, bubbleKey }) {
       className={`login-bot login-bot--prime${active ? ' login-bot--speaking' : ''}`}
       style={{ y: bodyY }}
       animate={{ rotate: active ? [0, -1.5, 1.5, 0] : 0 }}
-      transition={{ duration: 0.5, repeat: Infinity, ease: 'easeInOut' }}
+      transition={{ duration: 0.5, repeat: paused ? 0 : Infinity, ease: 'easeInOut' }}
     >
       <AnimatePresence initial={false}>
         {speech && <MangaSpeechBubble key={bubbleKey} text={speech} tail="center" />}
@@ -142,7 +168,7 @@ function EchoBot({ active, pupilX, pupilY, speech, bubbleKey }) {
           <motion.span
             className="login-bot-core-led"
             animate={{ opacity: active ? [0.5, 1, 0.5] : [0.25, 0.55, 0.25] }}
-            transition={{ duration: active ? 0.8 : 2.2, repeat: Infinity }}
+            transition={{ duration: active ? 0.8 : 2.2, repeat: paused ? 0 : Infinity }}
           />
         </div>
         <motion.div
@@ -165,8 +191,10 @@ export default function GymLoginSquad({
   clearAfterDone = false,
 }) {
   const sceneRef = useRef(null)
+  const inView = useInView(sceneRef, { once: false, amount: 0.3 })
   const [pupil, setPupil] = useState({ x: 0, y: 0 })
-  const { line, idx, speaker } = useBotSequence(lines, active, loop, clearAfterDone)
+  const sequenceActive = active && inView
+  const { line, idx, speaker } = useBotSequence(lines, sequenceActive, loop, clearAfterDone)
 
   useEffect(() => {
     const onMove = (e) => {
@@ -191,7 +219,10 @@ export default function GymLoginSquad({
   const showEcho = mode === 'trio'
 
   return (
-    <div className={`gym-login-scene gym-login-scene--${mode}${className ? ` ${className}` : ''}`} ref={sceneRef}>
+    <div
+      className={`gym-login-scene gym-login-scene--${mode}${inView ? '' : ' gym-login-scene--paused'}${className ? ` ${className}` : ''}`}
+      ref={sceneRef}
+    >
       <div className="login-scene-glow gym-login-scene__glow" />
       <div className="login-scene-grid gym-login-scene__grid" />
 
@@ -200,6 +231,7 @@ export default function GymLoginSquad({
           <SideBot
             variant="byte"
             active={speaker === 'nova'}
+            paused={!inView}
             pupilX={pupil.x}
             pupilY={pupil.y}
             speech={speaker === 'nova' ? line?.text : null}
@@ -209,6 +241,7 @@ export default function GymLoginSquad({
           {showEcho && (
             <EchoBot
               active={speaker === 'echo'}
+              paused={!inView}
               pupilX={pupil.x}
               pupilY={pupil.y}
               speech={speaker === 'echo' ? line?.text : null}
@@ -219,6 +252,7 @@ export default function GymLoginSquad({
           <SideBot
             variant="glitch"
             active={speaker === 'pixel'}
+            paused={!inView}
             pupilX={pupil.x}
             pupilY={pupil.y}
             speech={speaker === 'pixel' ? line?.text : null}

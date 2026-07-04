@@ -3,7 +3,14 @@ import { ArrowLeft, Sun, Moon } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 import '../styles/pages/shared/info-pages.css'
 
-// Shared shell for About / Terms / Privacy — sticky top bar + centered reading column
+const INFO_FOOTER_LINKS = [
+  { label: 'About', path: '/about' },
+  { label: 'Contact', path: '/contact' },
+  { label: 'Terms', path: '/terms' },
+  { label: 'Privacy', path: '/privacy' },
+]
+
+// Shared shell for About / Terms / Privacy / Contact — sticky top bar + centered reading column
 export default function InfoPageLayout({ label, title, updated, children }) {
   const navigate = useNavigate()
   const { theme, toggleTheme } = useTheme()
@@ -30,6 +37,21 @@ export default function InfoPageLayout({ label, title, updated, children }) {
         {updated && <div className="info-page__updated">LAST UPDATED · {updated}</div>}
         {children}
       </main>
+
+      <footer className="info-page__footer">
+        <div className="lp-footer__legal">
+          {INFO_FOOTER_LINKS.map(link => (
+            <button
+              key={link.label}
+              type="button"
+              className="lp-footer__legal-link"
+              onClick={() => navigate(link.path)}
+            >
+              {link.label}
+            </button>
+          ))}
+        </div>
+      </footer>
     </div>
   )
 }

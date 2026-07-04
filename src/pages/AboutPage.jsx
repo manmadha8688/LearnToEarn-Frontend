@@ -85,12 +85,12 @@ export default function AboutPage() {
         </p>
       </div>
 
-      <div className="info-section">
+      <div className="info-section" id="contact">
         <h2 className="info-section__title"><span className="info-section__num">05</span> Contact &amp; Feedback</h2>
         <p>
           This platform is actively built and improved based on student feedback. Found something
-          wrong, missing, or confusing? Use the <strong>Report button</strong> available on every
-          page, or the <strong>feedback form</strong> on the home page — every submission is read.
+          wrong, missing, or confusing? Use the <strong>Report button</strong> on every page,
+          or visit our <a onClick={() => navigate('/contact')} style={{ cursor: 'pointer' }}>Contact page</a>.
         </p>
         <p>
           <a onClick={() => { navigate('/'); setTimeout(() => document.getElementById('feedback')?.scrollIntoView({ behavior: 'smooth' }), 300) }} style={{ cursor: 'pointer' }}>
