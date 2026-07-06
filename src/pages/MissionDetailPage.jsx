@@ -12,6 +12,7 @@ import EnterArenaButton from '../components/EnterArenaButton'
 import SectionNotFoundPage from '../components/SectionNotFoundPage'
 import { isMongoId } from '../utils/mongoId'
 import { getMission } from '../api/api'
+import BookmarkButton from '../components/BookmarkButton'
 import { useTheme } from '../context/ThemeContext'
 
 const EASE = [0.16, 1, 0.3, 1]
@@ -94,6 +95,13 @@ export default function MissionDetailPage() {
           >
             {light ? <Moon size={14} /> : <Sun size={14} />}
           </button>
+          <BookmarkButton
+            type="MISSION"
+            refId={id}
+            title={mission.title}
+            description={mission.rank ? `${mission.rank}-Rank mission` : 'Mission'}
+            icon="🎯"
+          />
           <EnterArenaButton />
         </div>
       </header>

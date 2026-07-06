@@ -173,6 +173,19 @@ export const createWalkIn      = (d)      => postWalkIn(d)
 export const updateAdminWalkIn = (id, d)  => api.put(`/admin/walkins/${id}`, d)  .then(r => { clearApiCache('adminWalkIns'); return r })
 export const deleteWalkIn      = (id)     => removeWalkIn(id)
 
+// ─── SEARCH ───────────────────────────────────────────
+export const globalSearch = (q) => api.get('/search?q=' + encodeURIComponent(q))
+
+// ─── BOOKMARKS ────────────────────────────────────────
+export const getBookmarks       = ()            => api.get('/bookmarks')
+export const addBookmark        = (data)        => api.post('/bookmarks', data)
+export const removeBookmark     = (type, refId) => api.delete(`/bookmarks?type=${encodeURIComponent(type)}&refId=${encodeURIComponent(refId)}`)
+export const removeBookmarkById = (id)          => api.delete(`/bookmarks/${id}`)
+
+// ─── PROFILE ──────────────────────────────────────────
+export const getPublicProfile = (username) => api.get(`/public/profile/${encodeURIComponent(username)}`)
+export const updateProfile    = (data)     => api.put('/profile/me', data)
+
 // ─── REPORTS ──────────────────────────────────────────
 export const submitReport       = (data)     => api.post('/reports', data)
 export const getAdminReports    = (p=0,s=20,status='') => api.get(`/reports?page=${p}&size=${s}${status ? `&status=${status}` : ''}`)
