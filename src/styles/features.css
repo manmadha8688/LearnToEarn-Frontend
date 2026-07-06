@@ -284,6 +284,57 @@
 .feat-bookmark-btn.is-saved { color: var(--accent-light); border-color: var(--accent); background: var(--accent-bg); }
 .feat-bookmark-btn:disabled { opacity: 0.6; cursor: default; }
 
+/* Compact icon-only bookmark toggle (used on cards) */
+.feat-bookmark-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg-card) 80%, transparent);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.feat-bookmark-icon:hover { border-color: var(--accent); color: var(--text-primary); }
+.feat-bookmark-icon.is-saved { color: var(--accent-light); border-color: var(--accent); background: var(--accent-bg); }
+.feat-bookmark-icon:disabled { opacity: 0.6; cursor: default; }
+
+.ailab-tool-card__bookmark {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+}
+
+/* Bookmark inside the mission statement (hero) */
+.md-hero__inner { position: relative; }
+.md-hero__bookmark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+}
+
+/* Bookmark inside the problem statement card */
+.ps-card--statement { position: relative; }
+.ps-card__bookmark {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+}
+
+/* Bookmark inside deployment guide hero (top section, right) */
+.dgx-hero { position: relative; }
+.dgx-hero__bookmark {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 4;
+}
+
 /* Public profile */
 .feat-profile-hero {
   display: flex;

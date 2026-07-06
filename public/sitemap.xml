@@ -66,6 +66,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://learnforearn.in/deployment/vue</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://learnforearn.in/deployment/nextjs</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -157,6 +162,21 @@
   </url>
   <url>
     <loc>https://learnforearn.in/deployment/heavy-model-deploy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://learnforearn.in/deployment/discord-bot</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://learnforearn.in/deployment/scraper-automation</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://learnforearn.in/deployment/expo-mobile</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

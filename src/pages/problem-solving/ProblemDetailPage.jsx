@@ -111,13 +111,6 @@ export default function ProblemDetailPage() {
         </span>
 
         <div className="ps-nav__actions">
-          <BookmarkButton
-            type="PROBLEM"
-            refId={id}
-            title={problem.title}
-            description={problem.level}
-            icon="💻"
-          />
           <button type="button" onClick={toggleTheme} className="ps-nav__theme">
             {light ? <Moon size={14} /> : <Sun size={14} />}
           </button>
@@ -126,7 +119,17 @@ export default function ProblemDetailPage() {
 
       <div className="ps-detail-grid">
         <div className="ps-detail-left">
-          <div className="ps-card">
+          <div className="ps-card ps-card--statement">
+            <span className="ps-card__bookmark">
+              <BookmarkButton
+                type="PROBLEM"
+                refId={id}
+                title={problem.title}
+                description={problem.level}
+                icon="💻"
+                iconOnly
+              />
+            </span>
             <div className="ps-meta-row">
               <span className="ps-badge ps-badge--level" style={{ '--lm-color': lm.color }}>{lm.label}</span>
               {trackMeta && <span className="ps-badge ps-badge--track">{trackMeta.label}</span>}

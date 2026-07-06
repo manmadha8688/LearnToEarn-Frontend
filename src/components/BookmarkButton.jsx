@@ -19,7 +19,7 @@ export function invalidateBookmarkCache() { _cache = null }
  * Toggle a "save for later" bookmark for a piece of content.
  * type: SUBJECT | ROADMAP | MISSION | PROBLEM
  */
-export default function BookmarkButton({ type, refId, title, description, icon, className = '' }) {
+export default function BookmarkButton({ type, refId, title, description, icon, className = '', iconOnly = false, stopPropagation = false }) {
   const { isAuthenticated } = useAuth()
   const [saved, setSaved]     = useState(false)
   const [busy, setBusy]       = useState(false)
@@ -41,7 +41,8 @@ export default function BookmarkButton({ type, refId, title, description, icon, 
 
   if (!isAuthenticated) return null
 
-  const toggle = async () => {
+  const toggle = async (e) => {
+    if (stopPropagation) { e?.stopPropagation?.() }
     if (busy) return
     setBusy(true)
     try {
@@ -61,6 +62,22 @@ export default function BookmarkButton({ type, refId, title, description, icon, 
     } finally {
       if (mountedRef.current) setBusy(false)
     }
+  }
+
+  if (iconOnly) {
+    return (
+      <button
+        type="button"
+        onClick={toggle}
+        disabled={busy}
+        aria-pressed={saved}
+        aria-label={saved ? 'Remove bookmark' : 'Save bookmark'}
+        title={saved ? 'Saved' : 'Save for later'}
+        className={`feat-bookmark-icon${saved ? ' is-saved' : ''} ${className}`}
+      >
+        {saved ? <BookmarkCheck size={15} /> : <Bookmark size={15} />}
+      </button>
+    )
   }
 
   return (

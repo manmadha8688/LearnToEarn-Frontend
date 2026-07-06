@@ -95,13 +95,6 @@ export default function MissionDetailPage() {
           >
             {light ? <Moon size={14} /> : <Sun size={14} />}
           </button>
-          <BookmarkButton
-            type="MISSION"
-            refId={id}
-            title={mission.title}
-            description={mission.rank ? `${mission.rank}-Rank mission` : 'Mission'}
-            icon="🎯"
-          />
           <EnterArenaButton />
         </div>
       </header>
@@ -115,9 +108,20 @@ export default function MissionDetailPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: EASE }}
         >
+          <span className="md-hero__bookmark">
+            <BookmarkButton
+              type="MISSION"
+              refId={id}
+              title={mission.title}
+              description={mission.rank ? `${mission.rank}-Rank mission` : 'Mission'}
+              icon="🎯"
+              iconOnly
+            />
+          </span>
+
           <div className="md-hero__badges">
             <span className="md-rank-pill">{mission.rank}-RANK · {m.desc}</span>
-            <span className="md-hero__eyebrow">THE PROJECT</span>
+          
           </div>
 
           <h1 className="md-hero__title">{mission.title}</h1>

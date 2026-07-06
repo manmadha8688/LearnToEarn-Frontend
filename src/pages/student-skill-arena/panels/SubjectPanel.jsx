@@ -95,6 +95,7 @@ export default function SubjectPanel({ subjectId, onClose, onSkillClick, selecte
                   title={subject.title}
                   description={subject.rank ? `${subject.rank}-Rank gate` : undefined}
                   icon={subject.icon}
+                  iconOnly
                 />
               </div>
             </div>

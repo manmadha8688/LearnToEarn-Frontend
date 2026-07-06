@@ -91,13 +91,6 @@ function ProfileOverview({ user, onLogout, onNavigate }) {
         </div>
       )}
 
-      {user?.collegeName && (
-        <div className="lp-profile-panel__college">
-          <span className="lp-profile-panel__college-label">College</span>
-          <span>{user.collegeName}</span>
-        </div>
-      )}
-
       {!meta.isAdmin && (
         <div className="lp-profile-panel__actions">
           <button type="button" className="lp-profile-panel__action" onClick={() => onNavigate('/bookmarks')}>

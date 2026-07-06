@@ -12,8 +12,10 @@ const TYPE_META = {
   ROADMAP: { label: 'Hunter Paths (Roadmaps)',  link: (id) => `/skill-arena/roadmaps/${id}`,                     fallbackIcon: '🗺️' },
   MISSION: { label: 'Missions',                 link: (id) => `/missions/${id}`,                                 fallbackIcon: '🎯' },
   PROBLEM: { label: 'Code Gym Problems',        link: (id) => `/problem-solving/${id}`,                          fallbackIcon: '💻' },
+  AITOOL:  { label: 'AI Tools',                 link: (id) => `/ai-lab/${id}`,                                   fallbackIcon: '🤖' },
+  GUIDE:   { label: 'Deployment Guides',        link: (id) => id,                                                fallbackIcon: '🚀' },
 }
-const ORDER = ['SUBJECT', 'ROADMAP', 'MISSION', 'PROBLEM']
+const ORDER = ['SUBJECT', 'ROADMAP', 'MISSION', 'PROBLEM', 'AITOOL', 'GUIDE']
 
 function formatDate(iso) {
   if (!iso) return ''

@@ -212,6 +212,7 @@ export default function RoadmapDetailPage() {
                 title={roadmap.title}
                 description={roadmap.roleTarget}
                 icon={roadmap.icon}
+                iconOnly
               />
             </div>
           </div>
