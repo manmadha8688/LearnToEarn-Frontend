@@ -7,7 +7,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/sync-csp.mjs",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
