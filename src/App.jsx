@@ -135,12 +135,15 @@ function setMeta(selector, attr, value, create) {
 function Seo() {
   const { pathname } = useLocation()
   useEffect(() => {
-    const { title, description, canonical, noindex } = resolveSeo(pathname)
+    const { title, description, keywords, canonical, noindex } = resolveSeo(pathname)
 
     document.title = title
 
     setMeta('meta[name="description"]', 'content', description,
       () => Object.assign(document.createElement('meta'), { name: 'description' }))
+
+    setMeta('meta[name="keywords"]', 'content', keywords,
+      () => Object.assign(document.createElement('meta'), { name: 'keywords' }))
 
     setMeta('link[rel="canonical"]', 'href', canonical,
       () => Object.assign(document.createElement('link'), { rel: 'canonical' }))

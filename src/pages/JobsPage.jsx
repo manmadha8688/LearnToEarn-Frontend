@@ -46,10 +46,10 @@ function FilterSection({ title, icon: Icon, children, defaultOpen = true }) {
   )
 }
 
-function WalkInCard({ job, onDelete, userId, isAdmin, index = 0 }) {
+function WalkInCard({ job, onDelete, isAdmin, index = 0 }) {
   const [expanded, setExpanded] = useState(false)
   const days = daysUntil(job.walkInDate)
-  const canDelete = isAdmin || job.postedById === userId
+  const canDelete = isAdmin || job.mine
 
   const dateBadge = days === 0
     ? { bg: 'rgba(74,222,128,0.15)', color: '#4ADE80', border: 'rgba(74,222,128,0.3)', label: 'TODAY' }
@@ -435,7 +435,7 @@ export default function JobsPage() {
                   </div>
                   <div className="jobs-grid">
                     {todayJobs.map((j, i) => (
-                      <WalkInCard key={j.id} job={j} index={i} onDelete={handleDelete} userId={user?.id} isAdmin={user?.role === 'ADMIN'} />
+                      <WalkInCard key={j.id} job={j} index={i} onDelete={handleDelete} isAdmin={user?.role === 'ADMIN'} />
                     ))}
                   </div>
                 </div>
@@ -450,7 +450,7 @@ export default function JobsPage() {
                   </div>
                   <div className="jobs-grid">
                     {upcomingJobs.map((j, i) => (
-                      <WalkInCard key={j.id} job={j} index={i} onDelete={handleDelete} userId={user?.id} isAdmin={user?.role === 'ADMIN'} />
+                      <WalkInCard key={j.id} job={j} index={i} onDelete={handleDelete} isAdmin={user?.role === 'ADMIN'} />
                     ))}
                   </div>
                 </div>
