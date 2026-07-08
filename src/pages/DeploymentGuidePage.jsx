@@ -325,7 +325,7 @@ export default function DeploymentGuidePage() {
   return (
     <div className="deploy-hub-page">
 
-      <Navbar sticky showBack />
+      <Navbar sticky />
 
       <LaunchPipeline />
 

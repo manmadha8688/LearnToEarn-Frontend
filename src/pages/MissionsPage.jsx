@@ -127,7 +127,7 @@ export default function MissionsPage() {
   return (
     <div className="missions-page">
 
-      <Navbar sticky showBack />
+      <Navbar sticky />
 
       {/* ── Hero — copy left, connected value nodes right (full-width) ─── */}
       <section className="mb-hero mb-hero--split">

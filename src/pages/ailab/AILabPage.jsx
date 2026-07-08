@@ -83,6 +83,9 @@ export default function AILabPage() {
   const heroOpacity = useTransform(scrollY, [0, 500], [1, 0])
   const heroY = useTransform(scrollY, [0, 500], [0, -80])
   const splineScale = useTransform(scrollY, [0, 400], [1, 1.1])
+  // Skip scroll-linked parallax on touch/small screens to keep scrolling smooth.
+  const heroSectionStyle = enable3D ? { opacity: heroOpacity, y: heroY } : undefined
+  const splineStyle = enable3D ? { scale: splineScale } : undefined
 
   const filtered = TOOLS.filter(t => {
     const matchCat = activeCategory === 'all' || t.category === activeCategory
@@ -167,9 +170,9 @@ export default function AILabPage() {
         )}
       </AnimatePresence>
 
-      <Navbar sticky showBack />
+      <Navbar sticky />
 
-      <motion.section style={{ opacity: heroOpacity, y: heroY }}>
+      <motion.section style={heroSectionStyle}>
         <div className="ailab-hero">
           <div className="ailab-hero__grid" />
           <div className="ailab-hero__scanlines" />
@@ -219,7 +222,7 @@ export default function AILabPage() {
           </div>
 
           <motion.div
-            style={{ scale: splineScale }}
+            style={splineStyle}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 1.2 }}

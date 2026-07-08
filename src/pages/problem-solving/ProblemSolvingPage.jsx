@@ -32,7 +32,7 @@ export default function ProblemSolvingPage() {
         <div className="lv-aura__blob lv-aura__blob--3" />
       </div>
 
-      <Navbar sticky showBack />
+      <Navbar sticky />
 
       <section className="lv-hero lv-hero--split">
         <div className="lv-hero__shell">

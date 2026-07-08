@@ -91,7 +91,7 @@ export default function MyProfilePage() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
-      <Navbar sticky showBack />
+      <Navbar sticky />
 
       <div className="feat-page">
         <div className="feat-page-header">

@@ -14,7 +14,6 @@ import LandingAILabSection from './components/LandingAILabSection'
 import LandingDeploySection from './components/LandingDeploySection'
 import LandingHowItWorksSection from './components/LandingHowItWorksSection'
 import LandingFinalCtaSection from './components/LandingFinalCtaSection'
-import LandingFooter from './components/LandingFooter'
 
 export default function LandingPage() {
   const landing = useLandingPage()
@@ -43,7 +42,6 @@ export default function LandingPage() {
         <LandingGlowDivider />
         <LandingFeedbackSection />
         <LandingFinalCtaSection />
-        <LandingFooter />
       </div>
     </LandingPageProvider>
   )

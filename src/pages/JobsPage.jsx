@@ -366,7 +366,7 @@ export default function JobsPage() {
 
   return (
     <div className="jobs-page">
-      <Navbar sticky showBack />
+      <Navbar sticky />
 
       <div className="jobs-body">
         <aside className="jobs-sidebar">

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { Swords, Ghost, Menu, X as XIcon, Sun, Moon, ChevronRight, ChevronLeft, Search } from 'lucide-react'
+import { Swords, Ghost, Menu, X as XIcon, Sun, Moon, ChevronRight, Search } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
 import { guestLogin } from '../../api/api'
@@ -14,11 +14,12 @@ import { openGlobalSearch } from '../GlobalSearchOverlay'
  * Global site navbar — same look everywhere (landing + top-level feature pages).
  *
  * Props:
- *  - sticky:   render in normal flow, pinned on scroll (feature pages). Default is
- *              a fixed overlay bar used by the landing hero.
- *  - showBack: show a back-chevron (history back) on the far left. Logo/title always → home.
+ *  - sticky: render in normal flow, pinned on scroll (feature pages). Default is
+ *            a fixed overlay bar used by the landing hero.
+ *
+ * The logo/title always navigates home; back navigation is left to the browser.
  */
-export default function Navbar({ sticky = false, showBack = false }) {
+export default function Navbar({ sticky = false }) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const { theme, toggleTheme } = useTheme()
@@ -73,17 +74,6 @@ export default function Navbar({ sticky = false, showBack = false }) {
     <>
       <nav className={`lp-navbar${sticky ? ' lp-navbar--sticky' : ''}`}>
         <div className="lp-navbar__lead">
-          {showBack && (
-            <button
-              type="button"
-              className="lp-navbar__back"
-              onClick={() => navigate(-1)}
-              aria-label="Go back"
-              title="Back"
-            >
-              <ChevronLeft size={18} />
-            </button>
-          )}
           <Link to="/" className="lp-navbar__brand" aria-label="learnforearn home">
             <div className="lp-navbar__logo">
               <Swords size={16} color="#fff" />

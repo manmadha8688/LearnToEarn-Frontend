@@ -12,6 +12,7 @@ import ScrollToTop from './components/ScrollToTop'
 import ReportButton from './components/ReportButton'
 import AutoHideNav from './components/AutoHideNav'
 import GlobalSearchOverlay from './components/GlobalSearchOverlay'
+import SiteFooter from './components/SiteFooter'
 import { resolveSeo } from './utils/documentTitle'
 
 // ── Page components — lazy loaded ─────────────────────────────────────────────
@@ -94,6 +95,22 @@ function GlobalReportButton() {
   const hide = pathname.startsWith('/admin') || pathname === '/login' || pathname === '/register' || pathname === '/forgot-password' || pathname === '/loader-demo'
   if (hide) return null
   return <ReportButton variant="floating" />
+}
+
+// Global footer on every content page. Hidden on the app-like fullscreen
+// surfaces (Skill Arena, admin panels, auth stages, loader demo) where a
+// marketing footer would break the fixed-height / focused-task UX.
+function GlobalFooter() {
+  const { pathname } = useLocation()
+  const hide =
+    pathname.startsWith('/skill-arena') ||
+    pathname.startsWith('/admin') ||
+    pathname === '/login' ||
+    pathname === '/register' ||
+    pathname === '/forgot-password' ||
+    pathname === '/loader-demo'
+  if (hide) return null
+  return <SiteFooter />
 }
 
 function ScrollResetter() {
@@ -286,6 +303,7 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
+        <GlobalFooter />
       </BrowserRouter>
     </AuthProvider>
     </ThemeProvider>
