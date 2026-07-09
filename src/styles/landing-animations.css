@@ -545,14 +545,20 @@
 
 /* ── Mobile ── */
 @media (max-width: 768px) {
-  /* Grow to fit the copy instead of clipping it inside a fixed 100dvh box */
+  /* Grow to fit the copy instead of clipping it inside a fixed box.
+     Use svh (small viewport height) — it stays CONSTANT while scrolling,
+     unlike dvh/vh which shrink+grow as the mobile address bar hides/shows
+     and made the hero (and the image filling it) visibly zoom on scroll. */
   .lp-hero-section--robot {
     height: auto;
-    min-height: 100dvh;
+    min-height: 100vh;   /* fallback for old browsers */
+    min-height: 100svh;
     justify-content: center;
   }
-  /* Same 3D robot background as desktop */
+  /* Same 3D robot background as desktop. object-fit keeps the image scaled
+     proportionally so any height change never stretches/zooms it. */
   .lp-hero-robot { inset: 0; opacity: 1; }
+  .lp-hero-robot__img { object-fit: cover; }
   .lp-hero-stage { padding: 6rem 1.25rem 3rem; }
   .lp-punch-eyebrow { font-size: 0.6rem; margin-bottom: 1.1rem; }
   .lp-punch-title { font-size: clamp(1.55rem, 8.5vw, 2.5rem); margin-bottom: 1.1rem; }
