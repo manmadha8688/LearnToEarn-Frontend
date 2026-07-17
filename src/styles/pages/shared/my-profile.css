@@ -370,3 +370,34 @@
   .mpx-hero__meta .mpx-dot { display: none; }
   .mpx-hero__meta { gap: 5px 10px; }
 }
+
+/* ── GitHub connect ── */
+.mpx-github-connected__row { min-height: 44px; padding-right: 12px; }
+.mpx-github-connected__handle {
+  flex: 1; min-width: 0; padding: 0 9px; font-weight: 700; font-size: 0.92rem;
+  color: var(--text-primary); font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+.mpx-github-badge {
+  flex-shrink: 0; padding: 0.15rem 0.5rem; border-radius: 999px;
+  font-size: 0.62rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+  color: #10B981; background: color-mix(in srgb, #10B981 12%, var(--bg-secondary));
+  border: 1px solid color-mix(in srgb, #10B981 35%, var(--border));
+}
+.mpx-github-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.mpx-github-or { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 8px; }
+.mpx-github-or .mpx-hint { margin: 0; flex: 1 1 180px; }
+.mpx-github-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 0.5rem 0.9rem; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--bg-secondary); color: var(--text-primary);
+  font-weight: 700; font-size: 0.86rem; cursor: pointer;
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+  text-decoration: none;
+}
+.mpx-github-btn:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-secondary));
+  transform: translateY(-1px);
+}
+.mpx-github-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+.mpx-github-btn--ghost { background: transparent; }

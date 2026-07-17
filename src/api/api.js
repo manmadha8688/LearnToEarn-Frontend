@@ -271,6 +271,14 @@ export const removeBookmarkById = (id)          => api.delete(`/bookmarks/${id}`
 export const getPublicProfile = (username) => api.get(`/public/profile/${encodeURIComponent(username)}`)
 export const updateProfile    = (data)     => api.put('/profile/me', data)
 export const checkUsername    = (username) => api.get('/profile/check-username', { params: { username } })
+/** Fetch GitHub authorize URL via session cookie, then redirect (works on localhost + prod). */
+export const getGitHubConnectUrl = () => api.get('/profile/github/connect-url')
+export const connectGitHub = async () => {
+  const { data } = await getGitHubConnectUrl()
+  if (data?.url) window.location.href = data.url
+  else throw new Error('GitHub connect URL missing')
+}
+export const disconnectGitHub = () => api.delete('/profile/github').then(r => { clearUserCache(); return r })
 
 // ─── REPORTS ──────────────────────────────────────────
 // Report mutations bust the cached admin dashboard stats so the open-report

@@ -194,7 +194,12 @@ export default function PublicProfilePage() {
                 {(links.length > 0 || profile.publicEmail || resume) && (
                   <div className="pp-links">
                     {links.map(({ key, label, icon: Icon }) => (
-                      <a key={key} className="pp-link" href={profile[key]} target="_blank" rel="noopener noreferrer nofollow"><Icon size={14} /> {label}</a>
+                      <a key={key} className="pp-link" href={profile[key]} target="_blank" rel="noopener noreferrer nofollow">
+                        <Icon size={14} /> {label}
+                        {key === 'githubUrl' && profile.githubVerified && (
+                          <span className="pp-link__verified" title="Verified via GitHub">Verified</span>
+                        )}
+                      </a>
                     ))}
                     {profile.publicEmail && <a className="pp-link" href={`mailto:${profile.publicEmail}`}><Mail size={14} /> Email</a>}
                     {resume && (

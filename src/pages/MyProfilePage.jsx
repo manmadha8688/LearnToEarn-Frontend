@@ -4,11 +4,11 @@ import { motion, useReducedMotion } from 'framer-motion'
 import {
   User as UserIcon, AtSign, Mail, Lock, MapPin, GraduationCap, Building2,
   Github, Linkedin, Globe, Check, X, Loader2, Save, Share2, ExternalLink,
-  Eye, EyeOff, FileText,
+  Eye, EyeOff, FileText, Unlink,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
-import { updateProfile, checkUsername, listResumes } from '../api/api'
+import { updateProfile, checkUsername, listResumes, connectGitHub, disconnectGitHub } from '../api/api'
 import { getApiError } from '../utils/apiError'
 import { getRank } from '../utils/slRank'
 import Navbar from '../components/navbars/Navbar'
@@ -26,10 +26,17 @@ const AVATAR_COLORS = [
   '#F59E0B', '#10B981', '#06B6D4', '#3B82F6', '#64748B',
 ]
 const LINK_FIELDS = [
-  { key: 'githubUrl', label: 'GitHub', icon: Github, placeholder: 'https://github.com/username' },
   { key: 'linkedinUrl', label: 'LinkedIn', icon: Linkedin, placeholder: 'https://linkedin.com/in/username' },
   { key: 'portfolioUrl', label: 'Portfolio / website', icon: Globe, placeholder: 'https://your-site.com' },
 ]
+const GITHUB_ERRORS = {
+  denied: 'GitHub connection was cancelled.',
+  already_linked: 'That GitHub account is already linked to another user.',
+  unavailable: 'GitHub connect is not configured yet. Try again later.',
+  guest: 'Guest accounts cannot connect GitHub.',
+  invalid: 'GitHub connection expired. Please try again.',
+  failed: 'Could not connect GitHub. Please try again.',
+}
 
 const EMPTY_EDU = { degree: '', fieldOfStudy: '', institution: '', graduationYear: '', cgpa: '' }
 // Backend stores blank education fields as null; coerce to '' so inputs stay controlled.
@@ -101,6 +108,7 @@ export default function MyProfilePage() {
   const [resumesLoaded, setResumesLoaded] = useState(false)
   const [saving, setSaving] = useState(false)
   const [privacyBusy, setPrivacyBusy] = useState(false)
+  const [githubBusy, setGithubBusy] = useState(false)
   const [copied, setCopied] = useState(false)
   const [usernameStatus, setUsernameStatus] = useState('idle') // idle|checking|available|taken|invalid
   const [usernameError, setUsernameError] = useState('')
@@ -168,7 +176,38 @@ export default function MyProfilePage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resumes, resumesLoaded])
 
+  // OAuth return from GitHub (backend redirects to /myprofile?github=…).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const gh = params.get('github')
+    if (!gh) return
+    if (gh === 'connected') {
+      toast.success('GitHub connected — your profile link is verified.')
+      window.dispatchEvent(new Event('sl:refresh'))
+    } else if (gh === 'error') {
+      const reason = params.get('reason') || 'failed'
+      toast.error(GITHUB_ERRORS[reason] || GITHUB_ERRORS.failed)
+    }
+    params.delete('github')
+    params.delete('reason')
+    const qs = params.toString()
+    window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''))
+  }, [])
+
+  // After OAuth connect, /me refresh brings githubUrl — sync into the form once.
+  useEffect(() => {
+    if (!initializedRef.current || !user?.githubConnected) return
+    setForm(f => {
+      const url = user.githubUrl || ''
+      if (f.githubUrl === url) return f
+      const next = { ...f, githubUrl: url }
+      setBaseline(snapshot(next))
+      return next
+    })
+  }, [user?.githubConnected, user?.githubUrl])
+
   const isGuest = user?.role === 'GUEST'
+  const githubConnected = !!user?.githubConnected
   const profileUrl = form.username ? `${window.location.origin}/u/${form.username}` : ''
 
   const xp = user?.xp || 0
@@ -230,6 +269,10 @@ export default function MyProfilePage() {
       toast.error('Please fix the invalid links before saving.')
       return
     }
+    if (!githubConnected && urlState(form.githubUrl) === 'invalid') {
+      toast.error('Please fix the invalid GitHub link before saving.')
+      return
+    }
     if (emailState(form.publicEmail) === 'invalid') {
       toast.error('Please enter a valid public contact email address')
       return
@@ -245,14 +288,13 @@ export default function MyProfilePage() {
     setUsernameError('')
     setSaving(true)
     try {
-      const { data } = await updateProfile({
+      const payload = {
         fullName: form.fullName,
         username,
         bio: form.bio,
         avatarColor: form.avatarColor,
         location: form.location.trim(),
         publicEmail: form.publicEmail.trim(),
-        githubUrl: form.githubUrl.trim(),
         linkedinUrl: form.linkedinUrl.trim(),
         portfolioUrl: form.portfolioUrl.trim(),
         education: {
@@ -264,13 +306,16 @@ export default function MyProfilePage() {
         },
         publicProfile: form.publicProfile,
         featuredResumeId: form.featuredResumeId || '',
-      })
+      }
+      if (!githubConnected) payload.githubUrl = form.githubUrl.trim()
+      const { data } = await updateProfile(payload)
       const saved = {
         ...form,
         username: data?.username || username,
         location: data?.location ?? form.location,
         education: normEdu(data?.education || form.education),
         featuredResumeId: data?.featuredResumeId ?? form.featuredResumeId,
+        githubUrl: githubConnected ? (user?.githubUrl || form.githubUrl) : (data?.githubUrl ?? form.githubUrl),
       }
       if (!mountedRef.current) return
       setForm(saved)
@@ -288,6 +333,34 @@ export default function MyProfilePage() {
       else toast.error(msg)
     } finally {
       if (mountedRef.current) setSaving(false)
+    }
+  }
+
+  const handleConnectGitHub = async () => {
+    if (githubBusy) return
+    setGithubBusy(true)
+    try {
+      await connectGitHub()
+    } catch (err) {
+      toast.error(getApiError(err, 'Could not start GitHub connect. Is the backend running with GITHUB_CLIENT_ID set?'))
+      if (mountedRef.current) setGithubBusy(false)
+    }
+  }
+
+  const handleDisconnectGitHub = async () => {
+    if (githubBusy || !githubConnected) return
+    setGithubBusy(true)
+    try {
+      await disconnectGitHub()
+      const cleared = { ...form, githubUrl: '' }
+      setForm(cleared)
+      setBaseline(snapshot(cleared))
+      toast.success('GitHub disconnected')
+      window.dispatchEvent(new Event('sl:refresh'))
+    } catch (err) {
+      toast.error(getApiError(err, 'Could not disconnect GitHub. Please try again.'))
+    } finally {
+      if (mountedRef.current) setGithubBusy(false)
     }
   }
 
@@ -581,6 +654,59 @@ export default function MyProfilePage() {
             <h2 className="mpx-card__title"><Globe size={17} /> Social links</h2>
             <p className="mpx-card__sub">Optional — shown to visitors and recruiters.</p>
           </div>
+
+          {/* GitHub — OAuth connect or manual URL */}
+          <div className="mpx-field">
+            <label className="mpx-label" htmlFor="mpx-githubUrl">GitHub</label>
+            {githubConnected ? (
+              <div className="mpx-github-connected">
+                <div className="mpx-inputwrap is-locked mpx-github-connected__row">
+                  <Github size={15} className="mpx-inputwrap__icon" />
+                  <span className="mpx-github-connected__handle">
+                    @{user?.githubLogin || 'github-user'}
+                  </span>
+                  <span className="mpx-github-badge">Verified</span>
+                </div>
+                <div className="mpx-github-actions">
+                  {form.githubUrl && (
+                    <a className="mpx-github-btn mpx-github-btn--ghost" href={form.githubUrl} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink size={14} /> View profile
+                    </a>
+                  )}
+                  <button type="button" className="mpx-github-btn mpx-github-btn--ghost" disabled={githubBusy} onClick={handleDisconnectGitHub}>
+                    {githubBusy ? <Loader2 size={14} className="mpx-spin" /> : <Unlink size={14} />}
+                    Disconnect
+                  </button>
+                </div>
+                <p className="mpx-hint">Connected via GitHub — your profile URL is verified automatically.</p>
+              </div>
+            ) : (
+              <>
+                <div className={`mpx-inputwrap${urlState(form.githubUrl) === 'invalid' ? ' has-error' : ''}`}>
+                  <Github size={15} className="mpx-inputwrap__icon" />
+                  <input id="mpx-githubUrl" className="mpx-input mpx-input--affix"
+                    type="url" inputMode="url" autoComplete="off" spellCheck={false}
+                    value={form.githubUrl} placeholder="https://github.com/username"
+                    onChange={e => set('githubUrl', e.target.value)} />
+                  <span className="mpx-status">
+                    {urlState(form.githubUrl) === 'valid' && <Check size={15} className="mpx-status--ok" />}
+                    {urlState(form.githubUrl) === 'invalid' && <X size={15} className="mpx-status--bad" />}
+                  </span>
+                </div>
+                {urlState(form.githubUrl) === 'invalid' && (
+                  <p className="mpx-msg mpx-msg--bad">Enter a full URL starting with https://, or connect GitHub below.</p>
+                )}
+                <div className="mpx-github-or">
+                  <p className="mpx-hint">Connect GitHub to verify your profile link automatically (recommended).</p>
+                  <button type="button" className="mpx-github-btn" disabled={githubBusy} onClick={handleConnectGitHub}>
+                    {githubBusy ? <Loader2 size={15} className="mpx-spin" /> : <Github size={15} />}
+                    {githubBusy ? 'Connecting…' : 'Connect GitHub'}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+
           {LINK_FIELDS.map(({ key, label, icon: Icon, placeholder }, i) => {
             const st = urlState(form[key])
             return (
