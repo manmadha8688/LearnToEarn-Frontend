@@ -1,0 +1,41 @@
+.unsaved-changes-modal {
+  max-width: 26rem;
+  width: 100%;
+}
+
+.unsaved-changes-modal__lead {
+  margin: 0 0 1.25rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-muted, var(--muted));
+}
+
+.unsaved-changes-modal .modal-actions {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.unsaved-changes-modal .modal-actions .btn {
+  flex: 1 1 auto;
+  min-width: 5.5rem;
+  justify-content: center;
+}
+
+.unsaved-changes-modal__spin {
+  animation: unsaved-changes-spin 0.8s linear infinite;
+}
+
+@keyframes unsaved-changes-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+  .unsaved-changes-modal .modal-actions {
+    flex-direction: column;
+  }
+
+  .unsaved-changes-modal .modal-actions .btn {
+    width: 100%;
+    flex: none;
+  }
+}

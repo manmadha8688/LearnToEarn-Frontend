@@ -36,6 +36,17 @@ function degreeLine(edu) {
   if (!edu) return ''
   return [edu.degree, edu.fieldOfStudy].filter(Boolean).join(' in ')
 }
+function formatEduYears(edu) {
+  if (!edu) return null
+  const years = edu.years?.trim()
+  if (years) return years
+  const start = edu.yearStart?.trim()
+  const end = (edu.yearEnd || edu.graduationYear || '').trim()
+  if (start && end) return `${start} – ${end}`
+  if (end) return end
+  if (start) return start
+  return null
+}
 const host = (url) => { try { return new URL(/^https?:\/\//i.test(url) ? url : `https://${url}`).hostname.replace(/^www\./, '') } catch { return url } }
 const withProto = (url) => (/^https?:\/\//i.test(url) ? url : `https://${url}`)
 
@@ -110,7 +121,8 @@ export default function PublicProfilePage() {
   }, [rank, reduce])
 
   const edu = profile?.education
-  const hasAbout = !!(edu && (edu.degree || edu.fieldOfStudy || edu.institution || edu.graduationYear || edu.cgpa))
+  const eduYears = formatEduYears(edu)
+  const hasAbout = !!(edu && (edu.degree || edu.fieldOfStudy || edu.institution || edu.years || edu.graduationYear || edu.cgpa))
   const links = profile ? PROFILE_LINKS.filter(l => profile[l.key]) : []
   const work = profile?.missionWork || []
   const certs = profile?.certificates || []
@@ -347,7 +359,7 @@ export default function PublicProfilePage() {
                     {degreeLine(edu) && <p className="pp-edu__degree">{degreeLine(edu)}</p>}
                     {edu.institution && <p className="pp-edu__inst">{edu.institution}</p>}
                     <div className="pp-edu__tags">
-                      {edu.graduationYear && <span className="pp-tag"><Calendar size={12} /> Class of {edu.graduationYear}</span>}
+                      {eduYears && <span className="pp-tag"><Calendar size={12} /> {eduYears}</span>}
                       {edu.cgpa && <span className="pp-tag"><Trophy size={12} /> {edu.cgpa}</span>}
                     </div>
                   </div>
