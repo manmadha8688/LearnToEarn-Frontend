@@ -14,7 +14,7 @@ const FOOTER_COLUMNS = [
     title: 'Learn',
     links: [
       { label: 'Skills Arena', to: '/skill-arena/dashboard' },
-      { label: 'Code GYM', to: '/problem-solving' },
+      { label: 'Code GYM', to: '/code-gym' },
       { label: 'Aptitude', to: '/aptitude' },
       { label: 'AI Lab', to: '/ai-lab' },
       { label: 'Deploy Guidance', to: '/deployment' },

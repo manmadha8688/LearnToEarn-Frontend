@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react'
 import PageTransitionLoader from './components/loaders/PageTransitionLoader'
-import { createBrowserRouter, RouterProvider, Navigate, Outlet, useLocation, useNavigationType } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate, Outlet, useLocation, useNavigationType, useParams } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { ConfirmProvider } from './context/ConfirmContext'
@@ -38,7 +38,6 @@ const MissionsPage             = lazy(() => import('./pages/MissionsPage'))
 const MissionDetailPage        = lazy(() => import('./pages/MissionDetailPage'))
 const ResumePage               = lazy(() => import('./pages/resume/ResumePage'))
 const SharedResumePage         = lazy(() => import('./pages/resume/SharedResumePage'))
-const CodeEditorPage           = lazy(() => import('./pages/CodeEditorPage'))
 const JobsPage                 = lazy(() => import('./pages/JobsPage'))
 const FresherInstructionsPage  = lazy(() => import('./pages/FresherInstructionsPage'))
 const CareerGuidancePage       = lazy(() => import('./pages/CareerGuidancePage'))
@@ -140,6 +139,12 @@ function GlobalFooter() {
     pathname === '/loader-demo'
   if (hide) return null
   return <SiteFooter />
+}
+
+/** Old /problem-solving/:slug bookmarks → /code-gym/:slug */
+function LegacyCodeGymRedirect() {
+  const { slug } = useParams()
+  return <Navigate to={`/code-gym/${slug}`} replace />
 }
 
 // Per-history-entry scroll positions, keyed by the router location key.
@@ -346,14 +351,18 @@ const router = createBrowserRouter([
           { path: '/deployment/expo-mobile', element: <ExpoDeployPage /> },
         ],
       },
-      { path: '/problem-solving', element: <ProblemSolvingPage /> },
-      { path: '/problem-solving/start-coding', element: <ProtectedRoute><TrackPage /></ProtectedRoute> },
-      { path: '/problem-solving/logic-building', element: <ProtectedRoute><TrackPage /></ProtectedRoute> },
-      { path: '/problem-solving/skill-up', element: <ProtectedRoute><TrackPage /></ProtectedRoute> },
-      { path: '/problem-solving/crack-it', element: <ProtectedRoute><TrackPage /></ProtectedRoute> },
-      { path: '/problem-solving/build-it', element: <ProtectedRoute><TrackPage /></ProtectedRoute> },
-      { path: '/problem-solving/prove-it', element: <ProtectedRoute><TrackPage /></ProtectedRoute> },
-      { path: '/problem-solving/:id', element: <ProtectedRoute><ProblemDetailPage /></ProtectedRoute> },
+      // Code Gym — authenticated (landing, tracks, problem workspace)
+      { path: '/code-gym', element: <ProtectedRoute><ProblemSolvingPage /></ProtectedRoute> },
+      { path: '/code-gym/start-coding', element: <ProtectedRoute><TrackPage /></ProtectedRoute> },
+      { path: '/code-gym/logic-building', element: <ProtectedRoute><TrackPage /></ProtectedRoute> },
+      { path: '/code-gym/skill-up', element: <ProtectedRoute><TrackPage /></ProtectedRoute> },
+      { path: '/code-gym/crack-it', element: <ProtectedRoute><TrackPage /></ProtectedRoute> },
+      { path: '/code-gym/build-it', element: <ProtectedRoute><TrackPage /></ProtectedRoute> },
+      { path: '/code-gym/prove-it', element: <ProtectedRoute><TrackPage /></ProtectedRoute> },
+      { path: '/code-gym/:id', element: <ProtectedRoute><ProblemDetailPage /></ProtectedRoute> },
+      // Legacy /problem-solving → /code-gym
+      { path: '/problem-solving', element: <Navigate to="/code-gym" replace /> },
+      { path: '/problem-solving/:slug', element: <LegacyCodeGymRedirect /> },
       { path: '/aptitude', element: <AptitudePage /> },
       { path: '/aptitude/:category', element: <AptitudeCategoryPage /> },
       { path: '/aptitude/:category/:group', element: <AptitudeGroupPage /> },
@@ -362,7 +371,6 @@ const router = createBrowserRouter([
       { path: '/missions/:id', element: <ProtectedRoute><MissionDetailPage /></ProtectedRoute> },
       { path: '/resume', element: <ResumePage /> },
       { path: '/r/:slug', element: <SharedResumePage /> },
-      { path: '/code-editor', element: <ProtectedRoute><CodeEditorPage /></ProtectedRoute> },
       { path: '/u/:username', element: <PublicProfilePage /> },
       { path: '/certificate/verify', element: <CertificateVerifyPage /> },
       { path: '/certificate/verify/:code', element: <CertificateVerifyPage /> },
