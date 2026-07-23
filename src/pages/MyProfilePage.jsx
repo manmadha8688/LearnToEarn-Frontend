@@ -370,7 +370,7 @@ export default function MyProfilePage() {
   const contactEmailIsLogin = contactEmailNorm && contactEmailNorm === loginEmailNorm
 
   const xp = user?.xp || 0
-  const rank = useMemo(() => getRank(xp), [xp, theme]) // eslint-disable-line react-hooks/exhaustive-deps
+  const rank = useMemo(() => getRank(xp, user?.rank), [xp, user?.rank, theme]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const isPersonalDirty = useMemo(
     () => personalBaseline != null && personalSnapshot(form) !== personalBaseline,

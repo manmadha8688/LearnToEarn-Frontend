@@ -393,7 +393,7 @@ app.listen(port, '0.0.0.0', () => {
         text: [
           'The exact same Dockerfile deploys to other free/cheap container hosts:',
           '→ Koyeb — deploy from GitHub (Dockerfile) or a pushed image, free tier',
-          '→ Railway — Docker apps + databases, monthly credit',
+          '→ Railway — Docker apps + databases (one-time $5 trial, then paid)',
           '→ Fly.io — global containers (card required, small free-ish allowance)',
           '',
           'That is the whole point of Docker: build the box once, run it anywhere.',

@@ -51,6 +51,7 @@ const removeToast = (label, data) =>
     : label
 
 const RANK_META = {
+  E: { color: '#888888', bg: 'rgba(136,136,136,0.12)', desc: 'Starter' },
   D: { color: '#4ADE80', bg: 'rgba(74,222,128,0.12)',  desc: 'Beginner' },
   C: { color: '#60A5FA', bg: 'rgba(96,165,250,0.12)',  desc: 'Intermediate' },
   B: { color: '#9B6ED4', bg: 'rgba(155,110,212,0.12)', desc: 'Advanced' },

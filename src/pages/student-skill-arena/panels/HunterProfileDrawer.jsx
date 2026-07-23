@@ -5,6 +5,7 @@ import { RANK_LADDER } from '../../../constants/ranks'
 import { isGuest } from '../../../utils/auth'
 import RegisterCTA from '../../../components/RegisterCTA'
 import { CONCEPT_XP_RANGE, QUIZ_XP } from '../../../utils/quizXp'
+import { LEVEL_TITLES, titleForLevel, cumulativeXpForLevel } from '../../../utils/slLevel'
 import '../../../styles/pages/shared/certificates.css'
 
 // Plain-language glossary for the 3 core themed words a newcomer meets first.
@@ -26,22 +27,50 @@ const GLOSSARY = [
 // Shorter one-line words to round out the vocabulary.
 const QUICK_WORDS = [
   { k: 'Trial', v: 'a quiz you take to clear a skill or subject' },
-  { k: 'XP', v: 'points you earn for passing quizzes' },
-  { k: 'Rank (E → S)', v: 'your overall level, based on total XP' },
+  { k: 'XP', v: 'points you earn for passing quizzes & solving problems' },
+  { k: 'Level', v: 'grows purely from the XP you earn' },
+  { k: 'Rank (E → S)', v: 'earned across skills, coding, mocks, paths & missions' },
   { k: 'Badge', v: 'proof you finished a subject or roadmap' },
 ]
 
 const HOW_IT_WORKS = [
   { num: '01', color: '#9B6ED4', title: 'Pick a Hunter Path (career roadmap)', desc: 'Open the HUNTER PATH tab and choose a roadmap for the job you want — Java Full Stack, MERN, Python, or Frontend. It lays out the subjects to learn, in the right order.' },
   { num: '02', color: '#60A5FA', title: 'Enter a Dungeon Gate (subject)', desc: 'Open the DUNGEON GATE tab. Each gate is one subject (HTML, CSS, JavaScript…). Go in and learn its skills one by one, at your own pace.' },
-  { num: '03', color: '#F59E0B', title: 'Clear skills & earn XP', desc: `Read each skill, then pass its quiz (8 out of 10 to clear). Earn ${QUIZ_XP.concept.base}–${QUIZ_XP.concept.base + 2 * QUIZ_XP.concept.perPoint} XP per skill — the first one each day gives a +${QUIZ_XP.concept.dailyBonus} bonus.` },
+  { num: '03', color: '#F59E0B', title: 'Clear skills & earn XP', desc: `Read each skill, then pass its quiz (${QUIZ_XP.concept.pass} out of ${QUIZ_XP.concept.total} to clear). Earn ${QUIZ_XP.concept.base}–${QUIZ_XP.concept.base + (QUIZ_XP.concept.total - QUIZ_XP.concept.pass) * QUIZ_XP.concept.perPoint} XP per skill — the first one each day gives a +${QUIZ_XP.concept.dailyBonus} bonus.` },
 ]
 
 const XP_TIPS = [
   `First skill cleared today gives +${QUIZ_XP.concept.dailyBonus} bonus XP`,
-  `Skill trial: ${CONCEPT_XP_RANGE} (8 pass → ${QUIZ_XP.concept.base}, +${QUIZ_XP.concept.perPoint} per extra correct)`,
+  `Skill trial: ${CONCEPT_XP_RANGE} (${QUIZ_XP.concept.pass} pass → ${QUIZ_XP.concept.base}, +${QUIZ_XP.concept.perPoint} per extra correct)`,
   'Clear all skills in a gate to unlock the gate final test and badge',
   'Enroll a Hunter Path to track your full career progress',
+]
+
+// Rank requirements — mirror backend RankEvaluationService.computeCategoryRank EXACTLY.
+// Every listed condition must be met; rank is raise-only (never drops once earned).
+const RANK_REQS = [
+  { letter: 'D', color: '#4ADE80', xp: '1,000', reqs: [
+    '1 subject badge', '5 coding problems solved', 'Missions: 5 E-rank + 2 D-rank',
+  ] },
+  { letter: 'C', color: '#60A5FA', xp: '3,500', reqs: [
+    '3 subject badges', '20 coding problems', 'Aptitude mock best 35/50',
+    'Start 1 career path', 'Missions: 5 D-rank + 2 C-rank',
+  ] },
+  { letter: 'B', color: '#9B6ED4', xp: '8,000', reqs: [
+    '6 subject badges', '50 coding problems', 'Aptitude mock best 41/50',
+    '70% of one path · 2 paths started', 'Missions: 5 C-rank + 2 B-rank',
+    'Profile + resume complete',
+  ] },
+  { letter: 'A', color: '#F59E0B', xp: '16,000', reqs: [
+    '10 subject badges', '100 coding problems', 'Aptitude mock best 46/50',
+    '1 path completed · 50% of a 2nd', 'Missions: 4 B-rank + 2 A-rank',
+    'Profile + resume complete',
+  ] },
+  { letter: 'S', color: '#EF4444', xp: '30,000', reqs: [
+    '15 subject badges', '180 coding problems', 'Aptitude mock best 49/50',
+    '2 paths completed', 'Missions: 3 A-rank + 2 S-rank',
+    'Profile + resume complete',
+  ] },
 ]
 
 // What it takes to accomplish a mission. Mirrors MissionDetailPage / the board.
@@ -72,9 +101,11 @@ function SectionTitle({ children }) {
   )
 }
 
-export default function HunterProfileDrawer({ user, rank, xp, onClose, onLogout }) {
+export default function HunterProfileDrawer({ user, rank, xp, level = 1, onClose, onLogout }) {
   useBodyLock()
   const drawerRef = useModalA11y(onClose)
+  const currentTitle = titleForLevel(level)
+  const curRankIdx = Math.max(0, RANK_LADDER.findIndex(r => r.letter === rank.label))
 
   return (
     <>
@@ -149,7 +180,7 @@ export default function HunterProfileDrawer({ user, rank, xp, onClose, onLogout 
                   steps: [
                     'Enter a Dungeon Gate and clear all skills inside it',
                     'Once all skills are learned, the "Take Final Test" button unlocks',
-                    'Pass the gate final test (19/25) to earn the subject badge',
+                    'Pass the gate final test (31/40) to earn the subject badge',
                   ],
                 },
                 {
@@ -217,11 +248,48 @@ export default function HunterProfileDrawer({ user, rank, xp, onClose, onLogout 
           </div>
 
           <div>
-            <SectionTitle>RANK PROGRESSION GUIDE</SectionTitle>
+            <SectionTitle>HUNTER LEVEL &amp; TITLES</SectionTitle>
+            <div className="dash-hunter-about-card">
+              <p className="dash-hunter-about-card__text">
+                Your <strong>Level</strong> rises purely from <strong>XP</strong> — every trial, coding problem, mock and mission adds up. The more you earn, the higher you climb. Reaching milestone levels grants a <strong>Title</strong>. (Your <strong>Rank</strong> is separate — see below.)
+              </p>
+              <div className="dash-hunter-about-card__tags">
+                You are Level {level} · {currentTitle.icon} {currentTitle.title}
+              </div>
+            </div>
             <div className="dash-hunter-ranks">
-              {RANK_LADDER.map(r => {
+              {LEVEL_TITLES.map(t => {
+                const reached = level >= t.level
+                const isCurrent = reached && currentTitle.level === t.level
+                return (
+                  <div
+                    key={t.level}
+                    className={`dash-hunter-rank-row${isCurrent ? ' is-current' : ''}${!reached ? ' is-locked' : ''}`}
+                    style={{ '--rank-color': t.color, '--rank-bg': `${t.color}10`, '--rank-border': `${t.color}35`, '--rank-letter-bg': `${t.color}18` }}
+                  >
+                    <div className="dash-hunter-rank-row__letter">{t.icon}</div>
+                    <div className="dash-hunter-rank-row__info">
+                      <span className="dash-hunter-rank-row__label">{t.title}</span>
+                      <span className="dash-hunter-rank-row__xp">{t.level === 1 ? 'START' : `Lv ${t.level} · ${cumulativeXpForLevel(t.level).toLocaleString()} XP`}</span>
+                    </div>
+                    {isCurrent && <span className="dash-hunter-rank-row__now">NOW</span>}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          <div>
+            <SectionTitle>RANK PROGRESSION GUIDE</SectionTitle>
+            <div className="dash-hunter-about-card">
+              <p className="dash-hunter-about-card__text">
+                <strong>Rank</strong> is your overall class — earned across <strong>every</strong> activity, not XP alone. Each tier below needs <strong>all</strong> of its conditions met. Everyone starts at <strong>E-Rank</strong>, and rank is <strong>raise-only</strong> — once earned, it never drops.
+              </p>
+            </div>
+            <div className="dash-hunter-ranks">
+              {RANK_LADDER.map((r, idx) => {
                 const isCurrent = r.letter === rank.label
-                const isUnlocked = xp >= r.min
+                const isUnlocked = idx <= curRankIdx
                 return (
                   <div
                     key={r.letter}
@@ -231,12 +299,30 @@ export default function HunterProfileDrawer({ user, rank, xp, onClose, onLogout 
                     <div className="dash-hunter-rank-row__letter">{r.letter}</div>
                     <div className="dash-hunter-rank-row__info">
                       <span className="dash-hunter-rank-row__label">{r.label}</span>
-                      <span className="dash-hunter-rank-row__xp">{r.min === 0 ? 'START' : `${r.min.toLocaleString()} XP`}</span>
+                      <span className="dash-hunter-rank-row__xp">{r.min === 0 ? 'START' : `${r.min.toLocaleString()}+ XP · +more`}</span>
                     </div>
                     {isCurrent && <span className="dash-hunter-rank-row__now">NOW</span>}
                   </div>
                 )
               })}
+            </div>
+            <div className="dash-hunter-badge-guide">
+              {RANK_REQS.map(r => (
+                <div key={r.letter} className="dash-hunter-badge-card" style={{ '--badge-color': r.color, '--badge-bg': `${r.color}0A`, '--badge-border': `${r.color}25` }}>
+                  <div className="dash-hunter-badge-card__header">
+                    <span className="dash-hunter-badge-card__icon">{r.letter}</span>
+                    <span className="dash-hunter-badge-card__title">{r.letter}-Rank · {r.xp}+ XP</span>
+                  </div>
+                  <div className="dash-hunter-badge-card__steps">
+                    {r.reqs.map((req, i) => (
+                      <div key={i} className="dash-hunter-badge-step">
+                        <span className="dash-hunter-badge-step__num">✓</span>
+                        <span className="dash-hunter-badge-step__text">{req}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
             <div className="dash-hunter-xp-tips">
               <div className="dash-hunter-xp-tips__title">[ XP TIPS ]</div>

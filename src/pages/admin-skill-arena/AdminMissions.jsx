@@ -16,8 +16,8 @@ import useBodyLock from '../../hooks/useBodyLock'
 import SectionLabel from '../../components/admin/SectionLabel'
 import { listToText, textToList } from '../../components/admin/adminFormUtils'
 
-const RANKS = ['D', 'C', 'B', 'A', 'S']
-const RANK_COLORS = { S: '#EF4444', A: '#F59E0B', B: '#9B6ED4', C: '#60A5FA', D: '#22C55E' }
+const RANKS = ['E', 'D', 'C', 'B', 'A', 'S']
+const RANK_COLORS = { S: '#EF4444', A: '#F59E0B', B: '#9B6ED4', C: '#60A5FA', D: '#22C55E', E: '#888888' }
 
 function MissionModal({ mission, subjects, onClose, onSave }) {
   const [form, setForm] = useState(() => mission ? {

@@ -301,7 +301,7 @@ export default function ConceptInlinePanel({ conceptId, navList, onClose, startQ
                 {attempted ? 'Trial Not Cleared Yet' : 'Ready for Gate Trial?'}
               </div>
               <div className="dash-concept-quiz-prompt__desc">
-                10 trials · Pass 8/10 · {QUIZ_XP.concept.base}–{QUIZ_XP.concept.base + 2 * QUIZ_XP.concept.perPoint} XP
+                {QUIZ_XP.concept.total} trials · Pass {QUIZ_XP.concept.pass}/{QUIZ_XP.concept.total} · {QUIZ_XP.concept.base}–{QUIZ_XP.concept.base + (QUIZ_XP.concept.total - QUIZ_XP.concept.pass) * QUIZ_XP.concept.perPoint} XP
               </div>
 
               {inCooldown ? (

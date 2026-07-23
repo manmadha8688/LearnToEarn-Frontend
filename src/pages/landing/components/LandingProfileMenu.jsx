@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { LogOut, Bookmark, UserCog, GraduationCap, UserPlus } from 'lucide-react'
 import { getRank } from '../../../utils/slRank'
+import { levelProgress } from '../../../utils/slLevel'
 import { isGuest } from '../../../utils/auth'
 import useBodyLock from '../../../hooks/useBodyLock'
 import useBackClose from '../../../hooks/useBackClose'
@@ -35,7 +36,7 @@ function getRoleMeta(user) {
   if (isGuest(user)) {
     return { label: 'Guest Hunter', sub: 'Temporary session — progress may not be saved', isGuest: true, isAdmin: false }
   }
-  const rank = getRank(user?.xp ?? 0)
+  const rank = getRank(user?.xp ?? 0, user?.rank)
   return { label: `${rank.label}-Rank Hunter`, sub: 'Student account', rank, isGuest: false, isAdmin: false }
 }
 
@@ -64,27 +65,29 @@ function ProfileOverview({ user, onLogout, onNavigate, onClose }) {
         )}
       </div>
 
-      {!meta.isAdmin && !meta.isGuest && meta.rank && (
+      {!meta.isAdmin && !meta.isGuest && meta.rank && (() => {
+        const lp = levelProgress(xp)
+        const toNext = Math.max(0, lp.span - lp.into)
+        return (
         <div className="lp-profile-panel__xp">
           <div className="lp-profile-panel__xp-row">
-            <span>{xp.toLocaleString()} XP</span>
-            {meta.rank.next && (
-              <span className="lp-profile-panel__xp-next">
-                {meta.rank.next - xp} to {getRank(meta.rank.next).label}-Rank
-              </span>
-            )}
+            <span>Lv {lp.level} · {xp.toLocaleString()} XP</span>
+            <span className="lp-profile-panel__xp-next">
+              {toNext.toLocaleString()} to Lv {lp.level + 1}
+            </span>
           </div>
           <div className="lp-profile-panel__xp-track">
             <div
               className="lp-profile-panel__xp-fill"
               style={{
-                width: `${meta.rank.progress}%`,
+                width: `${lp.pct}%`,
                 background: `linear-gradient(90deg, ${meta.rank.color}99, ${meta.rank.color})`,
               }}
             />
           </div>
         </div>
-      )}
+        )
+      })()}
 
       <div className="lp-profile-panel__actions">
         {!meta.isAdmin && (
@@ -124,7 +127,7 @@ export function LandingProfileDropdown({ user, logout, dismissSignal = false }) 
   const [anchor, setAnchor] = useState(null)
   const isMobile = useIsMobile()
   const navigate = useNavigate()
-  const rank = getRank(user?.xp ?? 0)
+  const rank = getRank(user?.xp ?? 0, user?.rank)
   const isAdmin = user?.role === 'ADMIN'
 
   useBodyLock(open && isMobile)

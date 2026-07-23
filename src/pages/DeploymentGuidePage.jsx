@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/navbars/Navbar'
-import { Search, X, ExternalLink } from 'lucide-react'
+import { Search, X, ExternalLink, ChevronRight } from 'lucide-react'
 import { STACKS, PLATFORMS } from './deployment/guideIndex'
 import '../styles/pages/shared/deployment.css'
 import '../styles/pages/shared/deployment-stations.css'
@@ -252,27 +252,24 @@ function StackCard({ stack, i, onOpen }) {
       whileHover={{ y: -5 }}
       whileTap={{ scale: 0.98 }}
     >
-      <div className="deploy-stack-card__accent" />
-      <div className="deploy-stack-card__top">
-        <span className="deploy-stack-card__emoji">{stack.emoji}</span>
-        <span className="deploy-stack-card__platform">{stack.platforms}</span>
-      </div>
-      <div>
-        <div className="deploy-stack-card__title">{stack.title}</div>
-        <div className="deploy-stack-card__subtitle">{stack.subtitle}</div>
-      </div>
-      <div className="deploy-stack-card__desc">{stack.desc}</div>
-      <div className="deploy-stack-card__path" aria-hidden="true">
-        <span className="deploy-stack-card__path-step">code</span>
-        <span className="deploy-stack-card__path-arrow">→</span>
-        <span className="deploy-stack-card__path-step">GitHub</span>
-        <span className="deploy-stack-card__path-arrow">→</span>
-        <span className="deploy-stack-card__path-step deploy-stack-card__path-step--live">
-          <span className="deploy-stack-card__path-dot" />
-          {stack.platforms}
+      <span className="deploy-stack-card__top-accent" />
+      <span className="deploy-stack-card__shimmer" />
+      <span className="deploy-stack-card__side-bar" />
+
+      <span className="deploy-stack-card__header">
+        <span className="deploy-stack-card__icon">{stack.emoji}</span>
+        <span className="deploy-stack-card__info">
+          <span className="deploy-stack-card__name">{stack.title}</span>
+          <span className="deploy-stack-card__tagline">{stack.subtitle}</span>
         </span>
-      </div>
-      <div className="deploy-stack-card__cta">Open guide →</div>
+      </span>
+
+      <span className="deploy-stack-card__meta">{stack.desc}</span>
+
+      <span className="deploy-stack-card__footer">
+        <span className="deploy-stack-card__badge">{stack.platforms}</span>
+        <span className="deploy-stack-card__learn">Open guide <ChevronRight size={9} /></span>
+      </span>
     </motion.button>
   )
 }

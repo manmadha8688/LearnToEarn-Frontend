@@ -1,8 +1,10 @@
 import { X } from 'lucide-react'
 import useBodyLock from '../../../hooks/useBodyLock'
+import { levelProgress } from '../../../utils/slLevel'
 
 export default function MobileStatsPopup({ rank, level, xp, stats, onClose }) {
-  const xpToNext = rank.next ? rank.next - xp : null
+  const lp = levelProgress(xp)
+  const xpToNext = Math.max(0, lp.span - lp.into)
   useBodyLock()
   return (
     <>
@@ -26,11 +28,11 @@ export default function MobileStatsPopup({ rank, level, xp, stats, onClose }) {
               <div className="dash-progress-track dash-progress-track--md">
                 <div
                   className="dash-progress-fill"
-                  style={{ '--progress-pct': `${rank.progress}%`, '--accent': rank.color, '--accent-80': `${rank.color}80` }}
+                  style={{ '--progress-pct': `${lp.pct}%`, '--accent': rank.color, '--accent-80': `${rank.color}80` }}
                 />
               </div>
               <div className="dash-mob-stats-xp-hint">
-                {xpToNext != null ? `${xpToNext.toLocaleString()} XP to next rank` : 'MAX RANK ACHIEVED'}
+                {xpToNext.toLocaleString()} XP to Level {level + 1}
               </div>
             </div>
           </div>

@@ -18,6 +18,7 @@ import '../styles/pages/shared/missions-board.css'
 const EASE = [0.16, 1, 0.3, 1]
 
 const RANK_META = {
+  E: { color: '#888888', bg: 'rgba(136,136,136,0.12)', label: 'E-RANK' },
   D: { color: '#22C55E', bg: 'rgba(34,197,94,0.12)', label: 'D-RANK' },
   C: { color: '#60A5FA', bg: 'rgba(96,165,250,0.12)', label: 'C-RANK' },
   B: { color: '#9B6ED4', bg: 'rgba(155,110,212,0.12)', label: 'B-RANK' },

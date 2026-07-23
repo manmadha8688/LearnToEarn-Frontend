@@ -118,7 +118,7 @@ export default function PublicProfilePage() {
   }
 
   // ── derived ──
-  const rank = profile ? getRank(profile.xp || 0) : null
+  const rank = profile ? getRank(profile.xp || 0, profile.rank) : null
   const xp = profile?.xp || 0
   const toNext = rank && rank.next ? rank.next - xp : 0
 

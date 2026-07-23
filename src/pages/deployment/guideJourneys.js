@@ -458,4 +458,40 @@ export const GUIDE_JOURNEYS = {
       { icon: '✅', label: 'BOT ONLINE', sub: '24/7 free', live: true },
     ],
   },
+
+  'golang': {
+    title: 'From go.mod to a live Go API',
+    subtitle: 'Render detects Go from go.mod and builds a single binary — or ship a tiny Docker image that runs anywhere.',
+    stages: [
+      { icon: '🐹', label: 'GO APP', sub: 'reads $PORT' },
+      { icon: '↥', label: 'PUSH TO GITHUB', sub: 'go.mod + go.sum' },
+      { icon: '🖥', label: 'IMPORT ON HOST', sub: 'Render / Koyeb' },
+      { icon: '⚙', label: 'go build -o app', sub: 'one binary' },
+      { icon: '🌐', label: "YOU'RE LIVE", sub: '*.onrender.com', live: true },
+    ],
+  },
+
+  'dotnet': {
+    title: 'From C# code to a live container',
+    subtitle: 'No native .NET runtime on free hosts — a multi-stage Dockerfile builds with the SDK and runs on the slim ASP.NET image.',
+    stages: [
+      { icon: '🟣', label: 'ASP.NET CORE', sub: 'reads $PORT' },
+      { icon: '🐳', label: 'DOCKERFILE', sub: 'SDK → runtime' },
+      { icon: '↥', label: 'PUSH TO GITHUB', sub: 'a repo' },
+      { icon: '🖥', label: 'DEPLOY ON HOST', sub: 'Render / Koyeb' },
+      { icon: '🌐', label: "YOU'RE LIVE", sub: '*.onrender.com', live: true },
+    ],
+  },
+
+  'php': {
+    title: 'Two honest paths for PHP',
+    subtitle: 'Plain PHP + MySQL goes to InfinityFree via upload + phpMyAdmin; Laravel goes to Render/Koyeb in a Docker container.',
+    stages: [
+      { icon: '🐘', label: 'PHP PROJECT', sub: 'plain or Laravel' },
+      { icon: '❓', label: 'WHICH KIND?', sub: 'composer.json?' },
+      { icon: '↥', label: 'UPLOAD / DOCKER', sub: 'htdocs or image' },
+      { icon: '🗄️', label: 'MySQL / Neon', sub: 'the database' },
+      { icon: '🌐', label: "YOU'RE LIVE", sub: 'shareable link', live: true },
+    ],
+  },
 }

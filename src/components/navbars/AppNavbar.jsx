@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
 import { getRank } from '../../utils/slRank'
+import { levelProgress } from '../../utils/slLevel'
 import { openGlobalSearch } from '../globalSearchBus'
 
 /** Skill Arena top bar (used by AppLayout): sidebar toggle + XP/rank + hunter avatar. */
@@ -13,7 +14,8 @@ export default function AppNavbar({ onMenuClick, title = '' }) {
   const isAdmin = user?.role === 'ADMIN'
 
   const xp   = user?.xp   ?? 0
-  const rank = getRank(xp)
+  const rank = getRank(xp, user?.rank)
+  const levelPct = levelProgress(xp).pct
   const initials = user?.fullName?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
 
   return (
@@ -89,7 +91,7 @@ export default function AppNavbar({ onMenuClick, title = '' }) {
                 <div
                   className="xp-bar-fill"
                   style={{
-                    width: `${rank.progress}%`,
+                    width: `${levelPct}%`,
                     background: `linear-gradient(90deg, ${rank.color}99, ${rank.color})`,
                   }}
                 />

@@ -1,7 +1,7 @@
-import { useState, useRef, useMemo, useCallback, memo, Suspense, lazy } from 'react'
+import { useState, useRef, useMemo, useCallback, useEffect, memo, Suspense, lazy } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { Search, ChevronRight, Lock } from 'lucide-react'
+import { Search, ChevronRight, Lock, X } from 'lucide-react'
 import ScrollToTop from '../../components/ScrollToTop'
 import Navbar from '../../components/navbars/Navbar'
 import BookmarkButton from '../../components/BookmarkButton'
@@ -18,6 +18,13 @@ const SPLINE_ROBOT = 'https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splineco
 
 const PREVIEW_COUNT = 4
 const FULL_PREVIEW_CATEGORIES = new Set(['foundations'])
+
+// TOOLS / CATEGORIES are static imports, so these HUD counts never change — compute
+// them once at module load instead of re-scanning the arrays on every page re-render
+// (e.g. every search keystroke).
+const TOOL_COUNT = TOOLS.length
+const FREE_TOOL_COUNT = TOOLS.filter(t => t.free).length
+const CATEGORY_COUNT = CATEGORIES.length - 1
 
 const TAG_META = {
   trending:    { label: '🔥 Trending',   bg: 'rgba(249,115,22,0.15)',  color: '#F97316' },
@@ -72,45 +79,21 @@ const CAT_META = {
 export default function AILabPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const [activeCategory, setActiveCategory] = useState('all')
+  const [activeSection, setActiveSection] = useState('all')
   const [search, setSearch] = useState('')
   const [primerOpen, setPrimerOpen] = useState(false)
-  const [splineReady, setSplineReady] = useState(false)
-  const [searchFocused, setSearchFocused] = useState(false)
-  // Only load the ~4MB 3D hero when it's worth it: skip on mobile, data-saver,
-  // and for users who prefer reduced motion. They get a lightweight glow instead.
-  const [enable3D] = useState(() => {
-    if (typeof window === 'undefined') return false
-    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches
-    const saveData = navigator.connection?.saveData
-    const small = window.innerWidth < 768
-    return !reduced && !saveData && !small
-  })
+  const openPrimer = useCallback(() => setPrimerOpen(true), [])
+  const chipsRef = useRef(null)
+  const chipRefs = useRef({})
 
-  const { scrollY } = useScroll()
-  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0])
-  const heroY = useTransform(scrollY, [0, 500], [0, -80])
-  const splineScale = useTransform(scrollY, [0, 400], [1, 1.1])
-  // Skip scroll-linked parallax on touch/small screens to keep scrolling smooth.
-  // Memoized so the same style object ref is reused across re-renders (the MotionValues
-  // are per-component and stable, so this can't be a module-scope constant).
-  const heroSectionStyle = useMemo(
-    () => (enable3D ? { opacity: heroOpacity, y: heroY } : undefined),
-    [enable3D, heroOpacity, heroY])
-  const splineStyle = useMemo(
-    () => (enable3D ? { scale: splineScale } : undefined),
-    [enable3D, splineScale])
-
-  // Memoized so unrelated re-renders (search focus, spline load, primer toggle)
-  // don't rebuild the lists or hand new object refs to the memoized sections.
+  // Search-only filtering now — the category chips scroll to a section (deploy-style
+  // "Jump to" rail) rather than filtering the page down to a single category.
   const filtered = useMemo(() => {
     const q = search.toLowerCase()
-    const list = TOOLS.filter(t => {
-      const matchCat = activeCategory === 'all' || t.category === activeCategory
-      return matchCat && (!q || t.name.toLowerCase().includes(q) || t.tagline.toLowerCase().includes(q) || t.tags?.some(g => g.includes(q)))
-    })
-    return sortToolsByUsefulness(list, activeCategory, CATEGORIES)
-  }, [activeCategory, search])
+    const list = TOOLS.filter(t =>
+      !q || t.name.toLowerCase().includes(q) || t.tagline.toLowerCase().includes(q) || t.tags?.some(g => g.includes(q)))
+    return sortToolsByUsefulness(list, 'all', CATEGORIES)
+  }, [search])
   const grouped = useMemo(() => CATEGORIES.filter(c => c.id !== 'all').map(cat => ({
     ...cat,
     tools: sortToolsForCategory(filtered.filter(t => t.category === cat.id), cat.id),
@@ -120,6 +103,47 @@ export default function AILabPage() {
     if (!user) { navigate(`/login?redirect=${encodeURIComponent(path)}`); return }
     navigate(path)
   }, [user, navigate])
+
+  // Scroll-spy: highlight the chip whose category section is currently in view,
+  // mirroring the Deploy hub rail. Re-runs when the visible sections change
+  // (e.g. a search narrows them).
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) setActiveSection(e.target.dataset.ailabSection)
+        })
+      },
+      { rootMargin: '-25% 0px -65% 0px' }
+    )
+    document.querySelectorAll('[data-ailab-section]').forEach(el => io.observe(el))
+    return () => io.disconnect()
+  }, [grouped])
+
+  // Clicking a chip scrolls to that category section (or the top for "All Tools").
+  const jumpToSection = useCallback((id) => {
+    const el = document.getElementById(id === 'all' ? 'tools-grid' : `ailab-sec-${id}`)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [])
+
+  // Keep the scroll-spy'd chip visible in the horizontally-scrolling rail (16 chips
+  // overflow on desktop too). Mirrors the Deploy rail: an absolute scrollTo target
+  // (offsetLeft-based) is stable when the active chip changes rapidly during scroll,
+  // where a relative scrollBy would accumulate and jitter.
+  useEffect(() => {
+    const el = chipRefs.current[activeSection]
+    const container = chipsRef.current
+    if (!el || !container) return
+    const elLeft = el.offsetLeft
+    const elRight = elLeft + el.offsetWidth
+    const viewLeft = container.scrollLeft
+    const viewRight = viewLeft + container.clientWidth
+    if (elLeft < viewLeft) {
+      container.scrollTo({ left: Math.max(0, elLeft - 16), behavior: 'smooth' })
+    } else if (elRight > viewRight) {
+      container.scrollTo({ left: elRight - container.clientWidth + 16, behavior: 'smooth' })
+    }
+  }, [activeSection])
 
   return (
     <div className="ailab-page">
@@ -178,7 +202,7 @@ export default function AILabPage() {
                     whileHover={{ scale: 1.05, boxShadow: '0 0 24px rgba(0,217,255,0.4)' }}
                     whileTap={{ scale: 0.97 }}
                     type="button"
-                    onClick={() => { setPrimerOpen(false); setActiveCategory('foundations') }}
+                    onClick={() => { setPrimerOpen(false); jumpToSection('foundations') }}
                     className="ailab-btn-primary"
                   >
                     EXPLORE TOOLS →
@@ -192,163 +216,42 @@ export default function AILabPage() {
 
       <Navbar sticky />
 
-      <motion.section style={heroSectionStyle}>
-        <div className="ailab-hero">
-          <div className="ailab-hero__grid" />
-          <div className="ailab-hero__scanlines" />
-          <div className="ailab-hero__fade-bottom" />
-
-          <div className="ailab-hero__content">
-            <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}>
-              <h1 className="ailab-hero__title">
-                <span className="ailab-hero__eyebrow">THE FUTURE IS</span>
-                <span className="ailab-hero__ai-title">AI</span>
-                <span className="ailab-hero__main-title">TOOLS LAB</span>
-              </h1>
-            </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7, duration: 0.8 }}
-              className="ailab-hero__desc"
-            >
-              Every AI tool a developer needs — what it is, how it works,
-              free tutorials and a <strong>hands-on project</strong> for each.
-            </motion.p>
-
-            <motion.div initial={{ scaleX: 0, originX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.7, duration: 0.8 }} className="ailab-hero__divider" />
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.8, duration: 0.7 }} className="ailab-hero__cta-row">
-              <motion.button
-                whileHover={{ scale: 1.05, boxShadow: '0 0 50px rgba(0,217,255,0.45)' }}
-                whileTap={{ scale: 0.97 }}
-                type="button"
-                onClick={() => setPrimerOpen(true)}
-                className="ailab-hero__cta-outline"
-              >
-                📖 New to AI? Start here
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(124,58,237,0.45)' }}
-                whileTap={{ scale: 0.97 }}
-                type="button"
-                onClick={() => document.getElementById('tools-grid')?.scrollIntoView({ behavior: 'smooth' })}
-                className="ailab-hero__cta-solid"
-              >
-                Explore Tools →
-              </motion.button>
-            </motion.div>
-          </div>
-
-          <motion.div
-            style={splineStyle}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 1.2 }}
-            className={`ailab-hero__spline${splineReady ? ' ailab-spline-loaded' : ''}`}
-          >
-            <div className="ailab-hero__spline-glow" />
-            <div className="ailab-hero__spline-fade" />
-
-            {enable3D ? (
-              <>
-                {!splineReady && (
-                  <div className="ailab-hero__spline-loader">
-                    <div className="ailab-hero__spline-loader-inner">
-                      <motion.div animate={{ rotate: 360 }} transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }} className="ailab-hero__spline-spinner" />
-                      <span className="ailab-hero__spline-loader-text">LOADING 3D...</span>
-                    </div>
-                  </div>
-                )}
-                <Suspense fallback={null}>
-                  <Spline
-                    scene={SPLINE_ROBOT}
-                    onLoad={() => setSplineReady(true)}
-                    className="ailab-hero__spline-canvas"
-                    style={{ opacity: splineReady ? 1 : 0, transition: 'opacity 1s ease' }}
-                  />
-                </Suspense>
-              </>
-            ) : (
-              <div className="ailab-hero__spline-static" aria-hidden="true">🤖</div>
-            )}
-          </motion.div>
-
-          <div className="ailab-hero__hud-tr">
-            <HeroStatusPulse />
-            <div>AI_CORE: ACTIVE</div>
-            <div>TOOLS: {TOOLS.length} LOADED</div>
-          </div>
-          <div className="ailab-hero__hud-bl">
-            <div>FREE_TOOLS: {TOOLS.filter(t => t.free).length}</div>
-            <div>CATEGORIES: {CATEGORIES.length - 1}</div>
-          </div>
-        </div>
-      </motion.section>
+      <AILabHero onOpenPrimer={openPrimer} />
 
       <div id="tools-grid" className="ailab-tools">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="ailab-tools__filters"
-        >
-          <div className={`ailab-tools__search-wrap${searchFocused ? ' ailab-tools__search-wrap--focused' : ''}`}>
-            <Search size={14} className="ailab-tools__search-icon" />
-            <input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              onKeyDown={blurOnEnter}
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
-              placeholder="Search tools, categories, tags..."
-              className="ailab-tools__search"
-            />
-            {search && (
-              <button type="button" onClick={() => setSearch('')} className="ailab-tools__search-clear">×</button>
-            )}
+        <div className="ailab-rail">
+          <div className="ailab-rail__inner">
+            <span className="ailab-rail__label" aria-hidden="true">Jump to</span>
+            <AILabCategoryBar activeCategory={activeSection} onSelect={jumpToSection} containerRef={chipsRef} chipRefs={chipRefs} />
+            <div className="ailab-rail__search">
+              <Search size={13} className="ailab-rail__search-icon" />
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                onKeyDown={blurOnEnter}
+                placeholder='Search — "chatbot", "rag", "agent"…'
+                className="ailab-rail__search-input"
+              />
+              {search && (
+                <button type="button" onClick={() => setSearch('')} className="ailab-rail__search-clear" aria-label="Clear search">
+                  <X size={12} />
+                </button>
+              )}
+            </div>
           </div>
-
-          <div className="ailab-tools__categories">
-            {CATEGORIES.map(cat => (
-              <motion.button
-                key={cat.id}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                type="button"
-                onClick={() => setActiveCategory(cat.id)}
-                className={`ailab-tools__cat-btn${activeCategory === cat.id ? ' ailab-tools__cat-btn--active' : ''}`}
-              >
-                {cat.label}
-              </motion.button>
-            ))}
-          </div>
-        </motion.div>
+        </div>
 
         <div className="ailab-tools__grid-wrap">
-          {search || activeCategory !== 'all' ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <p className="ailab-tools__result-count">
-                {filtered.length} result{filtered.length !== 1 ? 's' : ''}
-              </p>
-              <div className="ailab-tools__grid">
-                {filtered.map((tool, i) => (
-                  <ToolCard key={tool.id} tool={tool} onSelect={goToTool} delay={i * 0.04} />
-                ))}
-              </div>
-              {filtered.length === 0 && (
-                <div className="ailab-tools__empty">
-                  <div className="ailab-tools__empty-icon">🔍</div>
-                  <p className="ailab-tools__empty-title">NO RESULTS</p>
-                </div>
-              )}
-            </motion.div>
-          ) : (
-            grouped.map((group, gi) => (
-              <CategorySection key={group.id} group={group} gi={gi} onTool={goToTool} />
-            ))
+          <div id="ailab-sec-all" data-ailab-section="all" aria-hidden="true" className="ailab-tools__spy-top" />
+          {grouped.map((group, gi) => (
+            <CategorySection key={group.id} group={group} gi={gi} onTool={goToTool} />
+          ))}
+          {grouped.length === 0 && (
+            <div className="ailab-tools__empty">
+              <div className="ailab-tools__empty-icon">🔍</div>
+              <p className="ailab-tools__empty-title">NO RESULTS</p>
+            </div>
           )}
         </div>
       </div>
@@ -356,6 +259,158 @@ export default function AILabPage() {
     </div>
   )
 }
+
+// Isolated into its own memoized component so page-level state that has nothing to
+// do with the hero (search text, category filter, primer modal, search focus) no
+// longer re-renders the heavy hero subtree — the 3D Spline wrapper, HUD, CTAs and
+// all their motion elements. Its only prop (onOpenPrimer) is a stable callback, so
+// this renders once and then only again when the Spline finishes loading.
+const AILabHero = memo(function AILabHero({ onOpenPrimer }) {
+  const [splineReady, setSplineReady] = useState(false)
+  // Only load the ~4MB 3D hero when it's worth it: skip on mobile, data-saver,
+  // and for users who prefer reduced motion. They get a lightweight glow instead.
+  const [enable3D] = useState(() => {
+    if (typeof window === 'undefined') return false
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches
+    const saveData = navigator.connection?.saveData
+    const small = window.innerWidth < 768
+    return !reduced && !saveData && !small
+  })
+
+  const { scrollY } = useScroll()
+  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0])
+  const heroY = useTransform(scrollY, [0, 500], [0, -80])
+  const splineScale = useTransform(scrollY, [0, 400], [1, 1.1])
+  // Skip scroll-linked parallax on touch/small screens to keep scrolling smooth.
+  // Memoized so the same style object ref is reused across re-renders (the MotionValues
+  // are per-component and stable, so this can't be a module-scope constant).
+  const heroSectionStyle = useMemo(
+    () => (enable3D ? { opacity: heroOpacity, y: heroY } : undefined),
+    [enable3D, heroOpacity, heroY])
+  const splineStyle = useMemo(
+    () => (enable3D ? { scale: splineScale } : undefined),
+    [enable3D, splineScale])
+
+  return (
+    <motion.section style={heroSectionStyle}>
+      <div className="ailab-hero">
+        <div className="ailab-hero__grid" />
+        <div className="ailab-hero__scanlines" />
+        <div className="ailab-hero__fade-bottom" />
+
+        <div className="ailab-hero__content">
+          <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}>
+            <h1 className="ailab-hero__title">
+              <span className="ailab-hero__eyebrow">THE FUTURE IS</span>
+              <span className="ailab-hero__ai-title">AI</span>
+              <span className="ailab-hero__main-title">TOOLS LAB</span>
+            </h1>
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+            className="ailab-hero__desc"
+          >
+            Every AI tool a developer needs — what it is, how it works,
+            free tutorials and a <strong>hands-on project</strong> for each.
+          </motion.p>
+
+          <motion.div initial={{ scaleX: 0, originX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.7, duration: 0.8 }} className="ailab-hero__divider" />
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.8, duration: 0.7 }} className="ailab-hero__cta-row">
+            <motion.button
+              whileHover={{ scale: 1.05, boxShadow: '0 0 50px rgba(0,217,255,0.45)' }}
+              whileTap={{ scale: 0.97 }}
+              type="button"
+              onClick={onOpenPrimer}
+              className="ailab-hero__cta-outline"
+            >
+              📖 New to AI? Start here
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(124,58,237,0.45)' }}
+              whileTap={{ scale: 0.97 }}
+              type="button"
+              onClick={() => document.getElementById('tools-grid')?.scrollIntoView({ behavior: 'smooth' })}
+              className="ailab-hero__cta-solid"
+            >
+              Explore Tools →
+            </motion.button>
+          </motion.div>
+        </div>
+
+        <motion.div
+          style={splineStyle}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 1.2 }}
+          className={`ailab-hero__spline${splineReady ? ' ailab-spline-loaded' : ''}`}
+        >
+          <div className="ailab-hero__spline-glow" />
+          <div className="ailab-hero__spline-fade" />
+
+          {enable3D ? (
+            <>
+              {!splineReady && (
+                <div className="ailab-hero__spline-loader">
+                  <div className="ailab-hero__spline-loader-inner">
+                    <motion.div animate={{ rotate: 360 }} transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }} className="ailab-hero__spline-spinner" />
+                    <span className="ailab-hero__spline-loader-text">LOADING 3D...</span>
+                  </div>
+                </div>
+              )}
+              <Suspense fallback={null}>
+                <Spline
+                  scene={SPLINE_ROBOT}
+                  onLoad={() => setSplineReady(true)}
+                  className="ailab-hero__spline-canvas"
+                  style={{ opacity: splineReady ? 1 : 0, transition: 'opacity 1s ease' }}
+                />
+              </Suspense>
+            </>
+          ) : (
+            <div className="ailab-hero__spline-static" aria-hidden="true">🤖</div>
+          )}
+        </motion.div>
+
+        <div className="ailab-hero__hud-tr">
+          <HeroStatusPulse />
+          <div>AI_CORE: ACTIVE</div>
+          <div>TOOLS: {TOOL_COUNT} LOADED</div>
+        </div>
+        <div className="ailab-hero__hud-bl">
+          <div>FREE_TOOLS: {FREE_TOOL_COUNT}</div>
+          <div>CATEGORIES: {CATEGORY_COUNT}</div>
+        </div>
+      </div>
+    </motion.section>
+  )
+})
+
+// Isolated so typing in the search box (which re-renders the page on every keystroke)
+// no longer re-renders these filter chips — they only depend on the active category.
+// Styled as the Deploy hub "Jump to" rail: a colored category dot + active underline.
+const AILabCategoryBar = memo(function AILabCategoryBar({ activeCategory, onSelect, containerRef, chipRefs }) {
+  return (
+    <div className="ailab-rail__chips" ref={containerRef} data-nav-ignore-scroll>
+      {CATEGORIES.map(cat => (
+        <button
+          key={cat.id}
+          type="button"
+          ref={el => { if (chipRefs) chipRefs.current[cat.id] = el }}
+          onClick={() => onSelect(cat.id)}
+          className={`ailab-rail__chip${activeCategory === cat.id ? ' ailab-rail__chip--active' : ''}`}
+          style={{ '--chip-color': CAT_META[cat.id]?.color || 'var(--ailab-cyan)' }}
+        >
+          <span className="ailab-rail__chip-dot" />
+          {cat.label}
+        </button>
+      ))}
+    </div>
+  )
+})
 
 // Isolated so its in-view state (and the infinite opacity pulse) never re-renders
 // the whole page, and the pulse pauses when the hero scrolls out of view.
@@ -387,6 +442,8 @@ const CategorySection = memo(function CategorySection({ group, gi, onTool }) {
   return (
     <motion.div
       ref={ref}
+      id={`ailab-sec-${group.id}`}
+      data-ailab-section={group.id}
       className="ailab-category"
       style={{ '--cat-color': meta.color }}
       initial={{ opacity: 0, y: 50 }}

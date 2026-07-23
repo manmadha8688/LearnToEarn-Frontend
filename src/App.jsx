@@ -75,6 +75,9 @@ const DockerDeployPage         = lazy(() => import('./pages/deployment/DockerDep
 const PythonAnywhereDeployPage = lazy(() => import('./pages/deployment/PythonAnywhereDeployPage'))
 const DenoDeployPage           = lazy(() => import('./pages/deployment/DenoDeployPage'))
 const KoyebDeployPage          = lazy(() => import('./pages/deployment/KoyebDeployPage'))
+const GolangDeployPage         = lazy(() => import('./pages/deployment/GolangDeployPage'))
+const DotnetDeployPage         = lazy(() => import('./pages/deployment/DotnetDeployPage'))
+const PhpDeployPage            = lazy(() => import('./pages/deployment/PhpDeployPage'))
 const FlutterDeployPage        = lazy(() => import('./pages/deployment/FlutterDeployPage'))
 const TelegramBotDeployPage    = lazy(() => import('./pages/deployment/TelegramBotDeployPage'))
 const StreamlitDeployPage      = lazy(() => import('./pages/deployment/StreamlitDeployPage'))
@@ -397,6 +400,9 @@ const router = createBrowserRouter([
           { path: '/deployment/pythonanywhere', element: <PythonAnywhereDeployPage /> },
           { path: '/deployment/deno-deploy', element: <DenoDeployPage /> },
           { path: '/deployment/koyeb', element: <KoyebDeployPage /> },
+          { path: '/deployment/golang', element: <GolangDeployPage /> },
+          { path: '/deployment/dotnet', element: <DotnetDeployPage /> },
+          { path: '/deployment/php', element: <PhpDeployPage /> },
           { path: '/deployment/flutter', element: <FlutterDeployPage /> },
           { path: '/deployment/telegram-bot', element: <TelegramBotDeployPage /> },
           { path: '/deployment/streamlit', element: <StreamlitDeployPage /> },

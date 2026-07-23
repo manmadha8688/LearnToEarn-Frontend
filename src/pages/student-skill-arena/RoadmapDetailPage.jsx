@@ -8,6 +8,7 @@ import { isMongoId } from '../../utils/mongoId'
 import { getRoadmap, enrollRoadmap, getRoadmapStatus } from '../../api/api'
 import BookmarkButton from '../../components/BookmarkButton'
 import { getRank } from '../../utils/slRank'
+import { QUIZ_XP } from '../../utils/quizXp'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
 import { getApiError } from '../../utils/apiError'
@@ -39,7 +40,7 @@ export default function RoadmapDetailPage() {
   const mountedRef = useRef(true)
 
   const xp       = user?.xp ?? 0
-  const rank     = getRank(xp)
+  const rank     = getRank(xp, user?.rank)
   const initials = user?.fullName?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
 
   useEffect(() => {
@@ -225,7 +226,7 @@ export default function RoadmapDetailPage() {
               <Trophy size={20} color="#F59E0B" className="dash-roadmap-cleared-banner__icon" />
               <div className="dash-roadmap-cleared-banner__body">
                 <div className="dash-roadmap-cleared-banner__title">All Gates Cleared!</div>
-                <div className="dash-roadmap-cleared-banner__meta">Path Trial available · 50 trials · 90 min</div>
+                <div className="dash-roadmap-cleared-banner__meta">Path Trial available · {QUIZ_XP.roadmap.total} trials · 110 min</div>
               </div>
               <button
                 onClick={() => navigate(`/skill-arena/quiz/roadmap/${id}`)}

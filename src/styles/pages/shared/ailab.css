@@ -540,96 +540,176 @@
   z-index: 1;
 }
 
-.ailab-tools__filters {
+/* ── Tools filter rail — matches the Deploy hub "Jump to" rail ───────────────
+   Sticky one-row bar: label + colored category chips + inline search. */
+.ailab-rail {
+  position: sticky;
+  /* Sits just under the sticky navbar; slides to the very top when the nav
+     auto-hides on scroll, so the filter always stays pinned with no gap. */
+  top: 64px;
+  z-index: 40;
+  background: var(--ailab-page-bg);
+  border-top: 1px solid var(--ailab-border);
+  border-bottom: 1px solid var(--ailab-border);
+  box-shadow: 0 8px 22px -6px rgba(0, 0, 0, 0.45);
+  transition: top 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: top;
+}
+
+[data-theme="light"] .ailab-rail {
+  box-shadow: 0 8px 20px -8px rgba(20, 25, 55, 0.18);
+}
+
+html.nav-hidden .ailab-rail { top: 0; }
+
+.ailab-rail__inner {
   max-width: 1140px;
   margin: 0 auto;
-  padding: 3rem 1.25rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.55rem clamp(1rem, 4vw, 2rem);
 }
 
-.ailab-tools__search-wrap {
+.ailab-rail__label {
+  flex-shrink: 0;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ailab-muted);
+  opacity: 0.8;
+}
+
+.ailab-rail__chips {
   position: relative;
-  max-width: 440px;
-  margin: 0 auto 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1;
+  min-width: 0;
+  padding-right: 0.85rem;
+  border-right: 1px solid var(--ailab-border);
+  margin-right: 0.15rem;
+}
+.ailab-rail__chips::-webkit-scrollbar { display: none; }
+
+.ailab-rail__chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  height: 32px;
+  box-sizing: border-box;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 0.85rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1;
+  color: var(--ailab-sub);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
 }
 
-.ailab-tools__search-icon {
+.ailab-rail__chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--chip-color) 55%, transparent);
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.ailab-rail__chip:hover {
+  color: var(--ailab-text);
+  background: color-mix(in srgb, var(--chip-color) 10%, transparent);
+}
+
+/* Touch devices keep a tapped chip's :hover tint "stuck"; drop it on non-active
+   chips where there's no true hover so only the real active chip stays lit. */
+@media (hover: none) {
+  .ailab-rail__chip:not(.ailab-rail__chip--active):hover {
+    color: var(--ailab-sub);
+    background: none;
+  }
+}
+
+.ailab-rail__chip--active {
+  background: color-mix(in srgb, var(--chip-color) 16%, transparent);
+  color: var(--ailab-text);
+}
+
+.ailab-rail__chip--active .ailab-rail__chip-dot {
+  background: var(--chip-color);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--chip-color) 60%, transparent);
+}
+
+.ailab-rail__chip--active::after {
+  content: '';
   position: absolute;
-  left: 14px;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: -0.55rem;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: var(--chip-color);
+}
+
+.ailab-rail__search {
+  position: relative;
+  width: clamp(180px, 24vw, 300px);
+  flex-shrink: 0;
+}
+
+.ailab-rail__search-icon {
+  position: absolute;
+  left: 0.7rem;
   top: 50%;
   transform: translateY(-50%);
-  transition: color 0.2s;
+  pointer-events: none;
   color: var(--ailab-muted);
 }
 
-.ailab-tools__search-wrap--focused .ailab-tools__search-icon {
-  color: var(--ailab-cyan);
-}
-
-.ailab-tools__search {
+.ailab-rail__search-input {
   width: 100%;
-  box-sizing: border-box;
-  padding-left: 38px;
-  padding-right: 14px;
-  height: 44px;
-  border-radius: 12px;
-  border: 1.5px solid var(--ailab-border);
   background: var(--ailab-search-bg);
+  border: 1px solid var(--ailab-border);
+  border-radius: 20px;
+  padding: 0.45rem 2rem;
+  font-size: 0.76rem;
   color: var(--ailab-text);
-  font-size: 0.875rem;
-  font-family: inherit;
   outline: none;
-  transition: all 0.2s;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+.ailab-rail__search-input:focus {
+  border-color: color-mix(in srgb, var(--ailab-cyan) 50%, transparent);
 }
 
-.ailab-tools__search-wrap--focused .ailab-tools__search {
-  border-color: rgba(0, 217, 255, 0.5);
-  box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
-}
-
-.ailab-tools__search-clear {
+.ailab-rail__search-clear {
   position: absolute;
-  right: 12px;
+  right: 0.55rem;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
   color: var(--ailab-muted);
-  font-size: 1rem;
-  padding: 0;
-}
-
-.ailab-tools__categories {
   display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.ailab-tools__cat-btn {
-  padding: 0.3rem 0.8rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.57rem;
-  letter-spacing: 0.04em;
-  transition: all 0.18s;
-  border: 1px solid var(--ailab-border);
-  background: transparent;
-  color: var(--ailab-sub);
-}
-
-.ailab-tools__cat-btn--active {
-  border: 1.5px solid var(--ailab-cyan);
-  background: rgba(0, 217, 255, 0.12);
-  color: var(--ailab-cyan);
-  box-shadow: 0 0 12px rgba(0, 217, 255, 0.2);
+  padding: 0.2rem;
 }
 
 .ailab-tools__grid-wrap {
   max-width: 1140px;
   margin: 0 auto;
-  padding: 0 1.25rem 7rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem) 1.25rem 7rem;
 }
 
 .ailab-tools__result-count {
@@ -664,9 +744,19 @@
   letter-spacing: 0.1em;
 }
 
+/* Invisible sentinel at the top of the tools list — lets the "All Tools" chip
+   light up (scroll-spy) when you're at the top, before any category is in view. */
+.ailab-tools__spy-top {
+  height: 1px;
+  scroll-margin-top: 120px;
+  pointer-events: none;
+}
+
 /* Category section */
 .ailab-category {
   margin-bottom: 4rem;
+  /* Land below the sticky navbar (64px) + filter rail when a chip jumps here. */
+  scroll-margin-top: 120px;
 }
 
 .ailab-category__banner {
@@ -1575,13 +1665,14 @@
 
   .ailab-category__grid--preview { grid-template-columns: 1fr; }
 
-  .ailab-tools__filters { padding: 2rem 1rem 1.5rem; }
-  .ailab-tools__grid-wrap { padding: 0 1rem 4.5rem; }
+  .ailab-rail { top: 60px; }
+  .ailab-rail__inner { flex-direction: column; align-items: stretch; gap: 0.55rem; padding: 0.6rem 1rem; }
+  .ailab-rail__label { display: none; }
+  .ailab-rail__chips { border-right: none; padding-right: 0; margin-right: 0; }
+  .ailab-rail__search { width: 100%; }
+  .ailab-tools__grid-wrap { padding: 1.25rem 1rem 4.5rem; }
   .ailab-category { margin-bottom: 2.5rem; }
   .ailab-category__banner { gap: 0.75rem; padding: 0.75rem 0.9rem; }
-
-  /* Comfortable tap target for category pills */
-  .ailab-tools__cat-btn { padding: 0.45rem 0.9rem; font-size: 0.62rem; }
 }
 
 /* Very small phones */

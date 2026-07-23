@@ -44,7 +44,7 @@ export default function QuizPage() {
   const [totalSeconds, setTotalSeconds] = useState(null)
 
   const xp      = user?.xp ?? 0
-  const rank    = getRank(xp)
+  const rank    = getRank(xp, user?.rank)
   const initials = user?.fullName?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
   useEffect(() => {
     const fn = QUIZ_TYPES[type]

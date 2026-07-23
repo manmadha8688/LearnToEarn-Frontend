@@ -18,6 +18,7 @@ import { useAuth } from '../../context/AuthContext'
 import blurOnEnter from '../../utils/blurOnEnter'
 import { useTheme } from '../../context/ThemeContext'
 import { getRank } from '../../utils/slRank'
+import { levelProgress, LEVEL_TITLES, titleForLevel } from '../../utils/slLevel'
 import toast from 'react-hot-toast'
 import { getApiError } from '../../utils/apiError'
 import { logApiError } from '../../utils/devLog'
@@ -499,8 +500,9 @@ export default function DashboardPage() {
   }
 
   const xp             = summary?.xp    ?? user?.xp    ?? 0
-  const rank           = useMemo(() => getRank(xp), [xp])
+  const rank           = useMemo(() => getRank(xp, summary?.rank ?? user?.rank), [xp, summary?.rank, user?.rank])
   const level          = summary?.level ?? user?.level ?? 1
+  const levelPct       = useMemo(() => levelProgress(xp).pct, [xp])
   const stats          = useMemo(() => computeStats(summary?.subjectProgress), [summary])
   const initials       = user?.fullName?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
   const questList      = questData?.quests || []
@@ -919,6 +921,43 @@ export default function DashboardPage() {
       )
     }
 
+    if (activeView === 'titles') {
+      const currentTitle = titleForLevel(level)
+      const earnedCount = LEVEL_TITLES.filter(t => level >= t.level).length
+      return (
+        <>
+          <div className="sl-panel-title">Your Titles</div>
+          <div className="coll-summary">
+            <strong>{earnedCount}</strong> of {LEVEL_TITLES.length} unlocked · titles unlock automatically as your Hunter Level rises
+          </div>
+          <div className="badge-grid badge-grid--panel">
+            {LEVEL_TITLES.map(t => {
+              const earned = level >= t.level
+              const isCurrent = earned && currentTitle.level === t.level
+              return (
+                <div
+                  key={t.level}
+                  className={`badge-card${earned ? '' : ' is-locked'}`}
+                  style={{ '--bc': earned ? t.color : '#64748b' }}>
+                  <div className="badge-card__glow" aria-hidden="true" />
+                  <div className="badge-card__medal">
+                    <span className="badge-card__medal-icon">{earned ? t.icon : '🔒'}</span>
+                    <span className="badge-card__medal-ring" aria-hidden="true" />
+                  </div>
+                  <div className="badge-card__kind">{isCurrent ? 'Current Title' : 'Hunter Title'}</div>
+                  <div className="badge-card__title">{t.title}</div>
+                  <div className="badge-card__subtitle">{t.level === 1 ? 'Starting title' : `Reach Level ${t.level}`}</div>
+                  <div className={`badge-card__earned${earned ? '' : ' is-locked'}`}>
+                    {earned ? (isCurrent ? '★ Active' : '✓ Unlocked') : 'Locked'}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </>
+      )
+    }
+
     if (activeView === 'history') {
       const filtered = filteredHistory
       const passed = historyPassedCount
@@ -1005,6 +1044,7 @@ export default function DashboardPage() {
           onStatsOpen={() => setMobilePopup('stats')}
           onBadgesOpen={() => switchView('badges')}
           onCertsOpen={() => switchView('certificates')}
+          onTitlesOpen={() => switchView('titles')}
           onQuestsOpen={() => setMobilePopup('quests')}
           onProfileOpen={() => setAvatarOpen(true)}
           onLogout={logout}
@@ -1041,7 +1081,8 @@ export default function DashboardPage() {
           {NAV_ITEMS.find(i => i.view === activeView)?.label
             || (activeView === 'badges' ? 'Badges'
               : activeView === 'history' ? 'History'
-              : activeView === 'certificates' ? 'Certificates' : 'ARISE')}
+              : activeView === 'certificates' ? 'Certificates'
+              : activeView === 'titles' ? 'Titles' : 'ARISE')}
         </div>
 
         {/* Desktop nav links */}
@@ -1065,7 +1106,7 @@ export default function DashboardPage() {
             <div className="xp-bar-track dash-nav-xp-bar">
               <div
                 className="xp-bar-fill dash-nav-xp-fill"
-                style={{ '--progress-pct': `${rank.progress}%`, '--rank-color': rank.color }}
+                style={{ '--progress-pct': `${levelPct}%`, '--rank-color': rank.color }}
               />
             </div>
           </div>
@@ -1223,6 +1264,11 @@ export default function DashboardPage() {
                     className={`dash-badges-cert-link${activeView === 'certificates' ? ' is-active' : ''}`}
                     onClick={() => switchView('certificates')}>
                     🎓 Certificates →
+                  </button>
+                  <button
+                    className={`dash-badges-cert-link${activeView === 'titles' ? ' is-active' : ''}`}
+                    onClick={() => switchView('titles')}>
+                    🏅 Titles →
                   </button>
                 </div>
               </div>

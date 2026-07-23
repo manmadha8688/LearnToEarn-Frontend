@@ -43,6 +43,10 @@ const LEVEL_UP = [
     accent: '#0EA5E9', icon: Dumbbell, title: 'Solve in the Code GYM',
     desc: <>Crack coding problems across the tracks — from your first line of code to interview-level DSA. Every problem you <em>solve for the first time</em> earns XP, once each.</>,
   },
+  {
+    accent: '#22D3EE', icon: Brain, title: 'Take Aptitude mocks',
+    desc: <>Sit the timed aptitude mock exam — Quant, Logical &amp; Verbal. <em>Beat your best score</em> and the improvement earns you XP.</>,
+  },
 ]
 
 const MAP = [
@@ -186,8 +190,9 @@ export default function AboutPage() {
             </div>
             <p className="ab-goal">
               ARISE turns students from <b>zero to hired</b>. You learn real skills, take on quests
-              and projects, and every win earns XP that raises your rank — from <b>E all the way to S</b>.
-              Learn like a game; level up for real.
+              and projects, and every win earns XP that raises your <b>Level</b> and unlocks <b>Titles</b>.
+              Master many areas — skills, coding, mocks, missions and more — and your <b>Rank</b> climbs
+              from <b>E all the way to S</b>. Learn like a game; level up for real.
             </p>
             <div className="ab-ranks">
               <div className="ab-ranks__track">
@@ -215,6 +220,11 @@ export default function AboutPage() {
                 </motion.div>
               ))}
             </div>
+            <p className="ab-level__note">
+              <b>&gt;</b> Two things to track: your <b>Level</b> rises purely with XP and unlocks <b>Titles</b>,
+              while your <b>Rank</b> (E→S) is earned by mastering many areas together — skills, coding, aptitude,
+              missions and a complete profile.
+            </p>
           </motion.section>
 
           {/* ── 02 · How to level up ────────────────────────────────────── */}
@@ -222,7 +232,7 @@ export default function AboutPage() {
             <div className="ab-shead">
               <span className="ab-shead__tag">02 · How to level up</span>
               <h2 className="ab-shead__title">How to earn XP</h2>
-              <p className="ab-shead__sub">Learn, build and complete — the XP follows. Here&apos;s where to start.</p>
+              <p className="ab-shead__sub">Every win earns XP — that raises your Level and unlocks Titles. Here&apos;s where to start.</p>
             </div>
             <div className="ab-level">
               {LEVEL_UP.map(({ icon: Icon, title, desc, accent }, i) => (

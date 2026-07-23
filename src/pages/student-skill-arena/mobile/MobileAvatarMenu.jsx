@@ -1,15 +1,18 @@
 import { LogOut, UserPlus } from 'lucide-react'
 import useBodyLock from '../../../hooks/useBodyLock'
 import { isGuest } from '../../../utils/auth'
+import { levelProgress } from '../../../utils/slLevel'
 import RegisterCTA from '../../../components/RegisterCTA'
 
-export default function MobileAvatarMenu({ rank, user, initials, level, xp, onClose, onStatsOpen, onBadgesOpen, onCertsOpen, onQuestsOpen, onProfileOpen, onLogout }) {
+export default function MobileAvatarMenu({ rank, user, initials, level, xp, onClose, onStatsOpen, onBadgesOpen, onCertsOpen, onTitlesOpen, onQuestsOpen, onProfileOpen, onLogout }) {
   useBodyLock()
-  const xpToNext = rank.next ? rank.next - xp : null
+  const lp = levelProgress(xp)
+  const xpToNext = Math.max(0, lp.span - lp.into)
   const MENU_ITEMS = [
     { icon: '⚡', label: 'Stats',         color: '#9B6ED4', onClick: onStatsOpen },
     { icon: '🏅', label: 'Badges',        color: '#F59E0B', onClick: onBadgesOpen },
     { icon: '📜', label: 'Certificates',  color: '#38BDF8', onClick: onCertsOpen },
+    { icon: '🎖️', label: 'Titles',        color: '#F472B6', onClick: onTitlesOpen },
     { icon: '📋', label: 'Daily Quests',  color: '#4ADE80', onClick: onQuestsOpen },
     { icon: '📖', label: 'Instructions',  color: '#60A5FA', onClick: onProfileOpen },
   ]
@@ -36,11 +39,11 @@ export default function MobileAvatarMenu({ rank, user, initials, level, xp, onCl
           <div className="dash-progress-track">
             <div
               className="dash-progress-fill"
-              style={{ '--progress-pct': `${rank.progress}%`, '--accent': rank.color, '--accent-80': `${rank.color}80` }}
+              style={{ '--progress-pct': `${lp.pct}%`, '--accent': rank.color, '--accent-80': `${rank.color}80` }}
             />
           </div>
           <div className="dash-mob-menu__xp-hint">
-            {xpToNext != null ? `${xpToNext.toLocaleString()} XP to next rank` : 'MAX RANK — S CLASS ACHIEVED'}
+            {xpToNext.toLocaleString()} XP to Level {level + 1}
           </div>
         </div>
 

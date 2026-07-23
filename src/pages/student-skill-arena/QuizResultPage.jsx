@@ -40,7 +40,7 @@ export default function QuizResultPage() {
   const [showAll, setShowAll] = useState(false)
 
   const xp       = user?.xp ?? 0
-  const rank     = getRank(xp)
+  const rank     = getRank(xp, user?.rank)
   const initials = user?.fullName?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
 
   useEffect(() => {
